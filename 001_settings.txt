@@ -1,0 +1,35 @@
+
+FTP_URL=https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/
+
+ARR_CHR_BZ2=(\
+refsnp-chrY.json.bz2 \
+refsnp-chrX.json.bz2 \
+refsnp-chrMT.json.bz2 \
+refsnp-chr1.json.bz2 \
+refsnp-chr2.json.bz2 \
+refsnp-chr3.json.bz2 \
+refsnp-chr4.json.bz2 \
+refsnp-chr5.json.bz2 \
+refsnp-chr6.json.bz2 \
+refsnp-chr7.json.bz2 \
+refsnp-chr8.json.bz2 \
+refsnp-chr9.json.bz2 \
+refsnp-chr10.json.bz2 \
+refsnp-chr11.json.bz2 \
+refsnp-chr12.json.bz2 \
+refsnp-chr13.json.bz2 \
+refsnp-chr14.json.bz2 \
+refsnp-chr15.json.bz2 \
+refsnp-chr16.json.bz2 \
+refsnp-chr17.json.bz2 \
+refsnp-chr18.json.bz2 \
+refsnp-chr19.json.bz2 \
+refsnp-chr20.json.bz2 \
+refsnp-chr21.json.bz2 \
+refsnp-chr22.json.bz2 \
+)
+
+#for i in "${ARR_CHR_BZ2[@]}"
+#do
+#echo ${FTP_URL}$i
+#done
