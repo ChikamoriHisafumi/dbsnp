@@ -13,14 +13,14 @@ select( $alleles."hgvs"| test(">")) |
 
 
 
-[
-."refsnp_id", 
-$pwa."seq_id", 
-$gene."orientation", 
-if $gene."orientation" == "plus" then "Fwd" elif $gene."orientation" == "minus" then "Rev" else "" end,
-$alleles."hgvs", 
-"Primary_Assembly", 
-."citations"[]
-] 
+{
+refspn_id: ."refsnp_id", 
+seq_id: $pwa."seq_id", 
+gene_orientation: $gene."orientation", 
+gene_orientation2: (if $gene."orientation" == "plus" then "Fwd" elif $gene."orientation" == "minus" then "Rev" else "" end),
+hgvs: $alleles."hgvs", 
+primary_assembly: "Primary_Assembly", 
+citations: ."citations"[]
+} 
  '
 
