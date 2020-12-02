@@ -1,0 +1,1607 @@
+{
+	"refsnp_id": "2267",
+	"create_date": "2000-09-19T17:02Z",
+	"last_update_date": "2020-04-27T23:01Z",
+	"last_update_build_id": "154",
+	"dbsnp1_merges": [
+		{
+			"merged_rsid": "59291991",
+			"revision": "130",
+			"merge_date": "2008-05-25T10:43Z"
+		},
+		{
+			"merged_rsid": "67359146",
+			"revision": "131",
+			"merge_date": "2009-12-2T15:53Z"
+		},
+		{
+			"merged_rsid": "187240064",
+			"revision": "137",
+			"merge_date": "2012-05-4T12:46Z"
+		}
+	],
+	"citations": [],
+	"lost_obs_movements": [],
+	"present_obs_movements": [
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "2294"
+				},
+				{
+					"type": "subsnp",
+					"value": "43720790"
+				},
+				{
+					"type": "subsnp",
+					"value": "85830252"
+				},
+				{
+					"type": "subsnp",
+					"value": "86062775"
+				},
+				{
+					"type": "subsnp",
+					"value": "95906202"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.8",
+				"position": 1978847,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "C"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "115585568"
+				},
+				{
+					"type": "subsnp",
+					"value": "484353511"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.9",
+				"position": 1895020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "C"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "1000Genomes.1:81288368"
+				},
+				{
+					"type": "frequency",
+					"value": "GENOME_DK.1:9473645"
+				},
+				{
+					"type": "frequency",
+					"value": "GnomAD.2:221739430"
+				},
+				{
+					"type": "frequency",
+					"value": "Qatari.1:21129692"
+				},
+				{
+					"type": "frequency",
+					"value": "SGDP_PRJ.1:42904269"
+				},
+				{
+					"type": "subsnp",
+					"value": "466264043"
+				},
+				{
+					"type": "subsnp",
+					"value": "566734606"
+				},
+				{
+					"type": "subsnp",
+					"value": "662667569"
+				},
+				{
+					"type": "subsnp",
+					"value": "678451670"
+				},
+				{
+					"type": "subsnp",
+					"value": "779136796"
+				},
+				{
+					"type": "subsnp",
+					"value": "1082757035"
+				},
+				{
+					"type": "subsnp",
+					"value": "1553301615"
+				},
+				{
+					"type": "subsnp",
+					"value": "1583308708"
+				},
+				{
+					"type": "subsnp",
+					"value": "1939087770"
+				},
+				{
+					"type": "subsnp",
+					"value": "2634933334"
+				},
+				{
+					"type": "subsnp",
+					"value": "2975967965"
+				},
+				{
+					"type": "subsnp",
+					"value": "3019548936"
+				},
+				{
+					"type": "subsnp",
+					"value": "3022984451"
+				},
+				{
+					"type": "subsnp",
+					"value": "3632820785"
+				},
+				{
+					"type": "subsnp",
+					"value": "3653542275"
+				},
+				{
+					"type": "subsnp",
+					"value": "3769857093"
+				},
+				{
+					"type": "subsnp",
+					"value": "3836067504"
+				},
+				{
+					"type": "subsnp",
+					"value": "3890887289"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.10",
+				"position": 1935020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "C"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "TOPMED.2:422916741"
+				},
+				{
+					"type": "subsnp",
+					"value": "3028993339"
+				},
+				{
+					"type": "subsnp",
+					"value": "3604069031"
+				},
+				{
+					"type": "subsnp",
+					"value": "3651240371"
+				},
+				{
+					"type": "subsnp",
+					"value": "3822713605"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.11",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "C"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "482832204"
+				},
+				{
+					"type": "subsnp",
+					"value": "781892459"
+				},
+				{
+					"type": "subsnp",
+					"value": "834601450"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000024.9",
+				"position": 1885020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "C"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "dbGaP_PopFreq.1:968267756"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "C"
+			},
+			"other_rsids_in_cur_release": [],
+			"last_added_to_this_rs": "154"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "2294"
+				},
+				{
+					"type": "subsnp",
+					"value": "43720790"
+				},
+				{
+					"type": "subsnp",
+					"value": "85830252"
+				},
+				{
+					"type": "subsnp",
+					"value": "86062775"
+				},
+				{
+					"type": "subsnp",
+					"value": "95906202"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.8",
+				"position": 1978847,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "A"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "115585568"
+				},
+				{
+					"type": "subsnp",
+					"value": "484353511"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.9",
+				"position": 1895020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "A"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "1000Genomes.1:81288368"
+				},
+				{
+					"type": "frequency",
+					"value": "GENOME_DK.1:9473645"
+				},
+				{
+					"type": "frequency",
+					"value": "GnomAD.2:221739430"
+				},
+				{
+					"type": "frequency",
+					"value": "Qatari.1:21129692"
+				},
+				{
+					"type": "frequency",
+					"value": "SGDP_PRJ.1:42904269"
+				},
+				{
+					"type": "subsnp",
+					"value": "466264043"
+				},
+				{
+					"type": "subsnp",
+					"value": "566734606"
+				},
+				{
+					"type": "subsnp",
+					"value": "662667569"
+				},
+				{
+					"type": "subsnp",
+					"value": "678451670"
+				},
+				{
+					"type": "subsnp",
+					"value": "779136796"
+				},
+				{
+					"type": "subsnp",
+					"value": "1082757035"
+				},
+				{
+					"type": "subsnp",
+					"value": "1553301615"
+				},
+				{
+					"type": "subsnp",
+					"value": "1583308708"
+				},
+				{
+					"type": "subsnp",
+					"value": "1939087770"
+				},
+				{
+					"type": "subsnp",
+					"value": "2634933334"
+				},
+				{
+					"type": "subsnp",
+					"value": "2975967965"
+				},
+				{
+					"type": "subsnp",
+					"value": "3019548936"
+				},
+				{
+					"type": "subsnp",
+					"value": "3022984451"
+				},
+				{
+					"type": "subsnp",
+					"value": "3632820785"
+				},
+				{
+					"type": "subsnp",
+					"value": "3653542275"
+				},
+				{
+					"type": "subsnp",
+					"value": "3769857093"
+				},
+				{
+					"type": "subsnp",
+					"value": "3836067504"
+				},
+				{
+					"type": "subsnp",
+					"value": "3890887289"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.10",
+				"position": 1935020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "A"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "TOPMED.2:422916741"
+				},
+				{
+					"type": "subsnp",
+					"value": "3028993339"
+				},
+				{
+					"type": "subsnp",
+					"value": "3604069031"
+				},
+				{
+					"type": "subsnp",
+					"value": "3651240371"
+				},
+				{
+					"type": "subsnp",
+					"value": "3822713605"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000023.11",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "A"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "subsnp",
+					"value": "482832204"
+				},
+				{
+					"type": "subsnp",
+					"value": "781892459"
+				},
+				{
+					"type": "subsnp",
+					"value": "834601450"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000024.9",
+				"position": 1885020,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"previous_release": {
+				"allele": {
+					"seq_id": "NC_000024.10",
+					"position": 1816127,
+					"deleted_sequence": "C",
+					"inserted_sequence": "A"
+				},
+				"rsids": [
+					"2267"
+				]
+			},
+			"last_added_to_this_rs": "151"
+		},
+		{
+			"component_ids": [
+				{
+					"type": "frequency",
+					"value": "dbGaP_PopFreq.1:968267756"
+				}
+			],
+			"observation": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"allele_in_cur_release": {
+				"seq_id": "NC_000024.10",
+				"position": 1816127,
+				"deleted_sequence": "C",
+				"inserted_sequence": "A"
+			},
+			"other_rsids_in_cur_release": [],
+			"last_added_to_this_rs": "154"
+		}
+	],
+	"primary_snapshot_data": {
+		"placements_with_allele": [
+			{
+				"seq_id": "NC_000024.10",
+				"is_ptlp": true,
+				"placement_annot": {
+					"seq_type": "refseq_chromosome",
+					"mol_type": "genomic",
+					"seq_id_traits_by_assembly": [
+						{
+							"assembly_name": "GRCh38.p12",
+							"assembly_accession": "GCF_000001405.38",
+							"is_top_level": true,
+							"is_alt": false,
+							"is_patch": false,
+							"is_chromosome": true
+						}
+					],
+					"is_aln_opposite_orientation": false,
+					"is_mismatch": false
+				},
+				"alleles": [
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000024.10",
+								"position": 1816127,
+								"deleted_sequence": "C",
+								"inserted_sequence": "C"
+							}
+						},
+						"hgvs": "NC_000024.10:g.1816128="
+					},
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000024.10",
+								"position": 1816127,
+								"deleted_sequence": "C",
+								"inserted_sequence": "A"
+							}
+						},
+						"hgvs": "NC_000024.10:g.1816128C>A"
+					}
+				]
+			},
+			{
+				"seq_id": "NC_000024.9",
+				"is_ptlp": false,
+				"placement_annot": {
+					"seq_type": "refseq_chromosome",
+					"mol_type": "genomic",
+					"seq_id_traits_by_assembly": [
+						{
+							"assembly_name": "GRCh37.p13",
+							"assembly_accession": "GCF_000001405.25",
+							"is_top_level": true,
+							"is_alt": false,
+							"is_patch": false,
+							"is_chromosome": true
+						}
+					],
+					"is_aln_opposite_orientation": false,
+					"is_mismatch": false
+				},
+				"alleles": [
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000024.9",
+								"position": 1885020,
+								"deleted_sequence": "C",
+								"inserted_sequence": "C"
+							}
+						},
+						"hgvs": "NC_000024.9:g.1885021="
+					},
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000024.9",
+								"position": 1885020,
+								"deleted_sequence": "C",
+								"inserted_sequence": "A"
+							}
+						},
+						"hgvs": "NC_000024.9:g.1885021C>A"
+					}
+				]
+			},
+			{
+				"seq_id": "NC_000023.11",
+				"is_ptlp": false,
+				"placement_annot": {
+					"seq_type": "refseq_chromosome",
+					"mol_type": "genomic",
+					"seq_id_traits_by_assembly": [
+						{
+							"assembly_name": "GRCh38.p12",
+							"assembly_accession": "GCF_000001405.38",
+							"is_top_level": true,
+							"is_alt": false,
+							"is_patch": false,
+							"is_chromosome": true
+						}
+					],
+					"is_aln_opposite_orientation": false,
+					"is_mismatch": false
+				},
+				"alleles": [
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000023.11",
+								"position": 1816127,
+								"deleted_sequence": "C",
+								"inserted_sequence": "C"
+							}
+						},
+						"hgvs": "NC_000023.11:g.1816128="
+					},
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000023.11",
+								"position": 1816127,
+								"deleted_sequence": "C",
+								"inserted_sequence": "A"
+							}
+						},
+						"hgvs": "NC_000023.11:g.1816128C>A"
+					}
+				]
+			},
+			{
+				"seq_id": "NC_000023.10",
+				"is_ptlp": false,
+				"placement_annot": {
+					"seq_type": "refseq_chromosome",
+					"mol_type": "genomic",
+					"seq_id_traits_by_assembly": [
+						{
+							"assembly_name": "GRCh37.p13",
+							"assembly_accession": "GCF_000001405.25",
+							"is_top_level": true,
+							"is_alt": false,
+							"is_patch": false,
+							"is_chromosome": true
+						}
+					],
+					"is_aln_opposite_orientation": false,
+					"is_mismatch": false
+				},
+				"alleles": [
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000023.10",
+								"position": 1935020,
+								"deleted_sequence": "C",
+								"inserted_sequence": "C"
+							}
+						},
+						"hgvs": "NC_000023.10:g.1935021="
+					},
+					{
+						"allele": {
+							"spdi": {
+								"seq_id": "NC_000023.10",
+								"position": 1935020,
+								"deleted_sequence": "C",
+								"inserted_sequence": "A"
+							}
+						},
+						"hgvs": "NC_000023.10:g.1935021C>A"
+					}
+				]
+			}
+		],
+		"allele_annotations": [
+			{
+				"frequency": [
+					{
+						"study_name": "1000Genomes",
+						"study_version": 1,
+						"local_row_id": 81288368,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 2757,
+						"total_count": 3775
+					},
+					{
+						"study_name": "GENOME_DK",
+						"study_version": 1,
+						"local_row_id": 9473645,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 37,
+						"total_count": 40
+					},
+					{
+						"study_name": "GnomAD",
+						"study_version": 2,
+						"local_row_id": 221739430,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 23843,
+						"total_count": 31310
+					},
+					{
+						"study_name": "Qatari",
+						"study_version": 1,
+						"local_row_id": 21129692,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 83,
+						"total_count": 108
+					},
+					{
+						"study_name": "SGDP_PRJ",
+						"study_version": 1,
+						"local_row_id": 42904269,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 82,
+						"total_count": 226
+					},
+					{
+						"study_name": "TOPMED",
+						"study_version": 2,
+						"local_row_id": 422916741,
+						"observation": {
+							"seq_id": "NC_000023.11",
+							"position": 1816127,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 92236,
+						"total_count": 125568
+					},
+					{
+						"study_name": "dbGaP_PopFreq",
+						"study_version": 1,
+						"local_row_id": 968267756,
+						"observation": {
+							"seq_id": "NC_000024.10",
+							"position": 1816127,
+							"deleted_sequence": "C",
+							"inserted_sequence": "C"
+						},
+						"allele_count": 3068,
+						"total_count": 3622
+					}
+				],
+				"clinical": [],
+				"submissions": [
+					"2294",
+					"43720790",
+					"85830252",
+					"86062775",
+					"95906202",
+					"115585568",
+					"466264043",
+					"482832204",
+					"484353511",
+					"566734606",
+					"662667569",
+					"678451670",
+					"779136796",
+					"781892459",
+					"834601450",
+					"1082757035",
+					"1553301615",
+					"1583308708",
+					"1939087770",
+					"2634933334",
+					"2975967965",
+					"3019548936",
+					"3022984451",
+					"3028993339",
+					"3604069031",
+					"3632820785",
+					"3651240371",
+					"3653542275",
+					"3769857093",
+					"3822713605",
+					"3836067504",
+					"3890887289"
+				],
+				"assembly_annotation": [
+					{
+						"seq_id": "NC_000023.11",
+						"annotation_release": "Homo sapiens Annotation Release 109",
+						"genes": []
+					}
+				]
+			},
+			{
+				"frequency": [
+					{
+						"study_name": "1000Genomes",
+						"study_version": 1,
+						"local_row_id": 81288368,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 1018,
+						"total_count": 3775
+					},
+					{
+						"study_name": "GENOME_DK",
+						"study_version": 1,
+						"local_row_id": 9473645,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 3,
+						"total_count": 40
+					},
+					{
+						"study_name": "GnomAD",
+						"study_version": 2,
+						"local_row_id": 221739430,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 7467,
+						"total_count": 31310
+					},
+					{
+						"study_name": "Qatari",
+						"study_version": 1,
+						"local_row_id": 21129692,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 25,
+						"total_count": 108
+					},
+					{
+						"study_name": "SGDP_PRJ",
+						"study_version": 1,
+						"local_row_id": 42904269,
+						"observation": {
+							"seq_id": "NC_000023.10",
+							"position": 1935020,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 144,
+						"total_count": 226
+					},
+					{
+						"study_name": "TOPMED",
+						"study_version": 2,
+						"local_row_id": 422916741,
+						"observation": {
+							"seq_id": "NC_000023.11",
+							"position": 1816127,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 33332,
+						"total_count": 125568
+					},
+					{
+						"study_name": "dbGaP_PopFreq",
+						"study_version": 1,
+						"local_row_id": 968267756,
+						"observation": {
+							"seq_id": "NC_000024.10",
+							"position": 1816127,
+							"deleted_sequence": "C",
+							"inserted_sequence": "A"
+						},
+						"allele_count": 554,
+						"total_count": 3622
+					}
+				],
+				"clinical": [],
+				"submissions": [
+					"2294",
+					"43720790",
+					"85830252",
+					"86062775",
+					"95906202",
+					"115585568",
+					"466264043",
+					"482832204",
+					"484353511",
+					"566734606",
+					"662667569",
+					"678451670",
+					"779136796",
+					"781892459",
+					"834601450",
+					"1082757035",
+					"1553301615",
+					"1583308708",
+					"1939087770",
+					"2634933334",
+					"2975967965",
+					"3019548936",
+					"3022984451",
+					"3028993339",
+					"3604069031",
+					"3632820785",
+					"3651240371",
+					"3653542275",
+					"3769857093",
+					"3822713605",
+					"3836067504",
+					"3890887289"
+				],
+				"assembly_annotation": [
+					{
+						"seq_id": "NC_000023.11",
+						"annotation_release": "Homo sapiens Annotation Release 109",
+						"genes": []
+					}
+				]
+			}
+		],
+		"support": [
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss2294"
+				},
+				"revision_added": "36",
+				"create_date": "2000-09-19T17:02Z",
+				"submitter_handle": "WIAF"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss43720790"
+				},
+				"revision_added": "126",
+				"create_date": "2006-03-14T02:38Z",
+				"submitter_handle": "ABI"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss85830252"
+				},
+				"revision_added": "130",
+				"create_date": "2007-12-15T14:51Z",
+				"submitter_handle": "HGSV"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss86062775"
+				},
+				"revision_added": "130",
+				"create_date": "2007-12-15T14:51Z",
+				"submitter_handle": "HGSV"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss95906202"
+				},
+				"revision_added": "131",
+				"create_date": "2009-02-5T18:54Z",
+				"submitter_handle": "HUMANGENOME_JCVI"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss115585568"
+				},
+				"revision_added": "131",
+				"create_date": "2009-02-14T09:03Z",
+				"submitter_handle": "ILLUMINA-UK"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss466264043"
+				},
+				"revision_added": "137",
+				"create_date": "2011-09-17T04:07Z",
+				"submitter_handle": "1000GENOMES"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss482832204"
+				},
+				"revision_added": "137",
+				"create_date": "2012-05-4T12:43Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss484353511"
+				},
+				"revision_added": "137",
+				"create_date": "2012-05-4T12:43Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss566734606"
+				},
+				"revision_added": "138",
+				"create_date": "2013-04-25T23:59Z",
+				"submitter_handle": "TISHKOFF"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss662667569"
+				},
+				"revision_added": "138",
+				"create_date": "2013-04-25T23:59Z",
+				"submitter_handle": "SSMP"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss678451670"
+				},
+				"revision_added": "138",
+				"create_date": "2013-04-25T23:59Z",
+				"submitter_handle": "WARNICH_LAB"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss779136796"
+				},
+				"revision_added": "146",
+				"create_date": "2015-09-8T16:25Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss781892459"
+				},
+				"revision_added": "149",
+				"create_date": "2016-09-28T11:42Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss834601450"
+				},
+				"revision_added": "149",
+				"create_date": "2016-09-28T11:42Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss1082757035"
+				},
+				"revision_added": "142",
+				"create_date": "2014-08-21T15:37Z",
+				"submitter_handle": "JMKIDD_LAB"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss1553301615"
+				},
+				"revision_added": "144",
+				"create_date": "2015-04-1T10:43Z",
+				"submitter_handle": "1000GENOMES"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss1583308708"
+				},
+				"revision_added": "144",
+				"create_date": "2015-04-1T10:43Z",
+				"submitter_handle": "EVA_GENOME_DK"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss1939087770"
+				},
+				"revision_added": "147",
+				"create_date": "2016-02-12T12:05Z",
+				"submitter_handle": "WEILL_CORNELL_DGM"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss2634933334"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss2975967965"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "GNOMAD"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3019548936"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "SWEGEN"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3022984451"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3028993339"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "BIOINF_KMB_FNS_UNIBA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3604069031"
+				},
+				"revision_added": "151",
+				"create_date": "2017-11-8T11:52Z",
+				"submitter_handle": "TOPMED"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3632820785"
+				},
+				"revision_added": "152",
+				"create_date": "2018-10-13T01:19Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3651240371"
+				},
+				"revision_added": "152",
+				"create_date": "2018-10-13T01:19Z",
+				"submitter_handle": "URBANLAB"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3653542275"
+				},
+				"revision_added": "152",
+				"create_date": "2018-10-13T01:19Z",
+				"submitter_handle": "ILLUMINA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3769857093"
+				},
+				"revision_added": "153",
+				"create_date": "2019-07-14T04:19Z",
+				"submitter_handle": "EVA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3822713605"
+				},
+				"revision_added": "153",
+				"create_date": "2019-07-14T04:19Z",
+				"submitter_handle": "KHV_HUMAN_GENOMES"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3836067504"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "EVA"
+			},
+			{
+				"id": {
+					"type": "subsnp",
+					"value": "ss3890887289"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "SGDP_PRJ"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "1000Genomes.1:81288368"
+				},
+				"revision_added": "152",
+				"create_date": "2018-10-13T01:19Z",
+				"submitter_handle": "1000Genomes"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "GENOME_DK.1:9473645"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "GENOME_DK"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "GnomAD.2:221739430"
+				},
+				"revision_added": "153",
+				"create_date": "2019-07-14T04:19Z",
+				"submitter_handle": "GnomAD"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "Qatari.1:21129692"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "Qatari"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "SGDP_PRJ.1:42904269"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "SGDP_PRJ"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "TOPMED.2:422916741"
+				},
+				"revision_added": "152",
+				"create_date": "2018-10-13T01:19Z",
+				"submitter_handle": "TOPMED"
+			},
+			{
+				"id": {
+					"type": "frequency",
+					"value": "dbGaP_PopFreq.1:968267756"
+				},
+				"revision_added": "154",
+				"create_date": "2020-04-27T23:01Z",
+				"submitter_handle": "dbGaP_PopFreq"
+			}
+		],
+		"anchor": "NC_000024.10:0001816127:1:snv",
+		"variant_type": "snv",
+		"ga4gh": {
+			"NC_000023.10:1935020:C:A": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1935020,
+						"end": 1935021
+					},
+					"sequence_id": "refseq:NC_000023.10"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "A"
+				},
+				"type": "Allele"
+			},
+			"NC_000023.10:1935020:C:C": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1935020,
+						"end": 1935021
+					},
+					"sequence_id": "refseq:NC_000023.10"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "C"
+				},
+				"type": "Allele"
+			},
+			"NC_000023.11:1816127:C:A": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1816127,
+						"end": 1816128
+					},
+					"sequence_id": "refseq:NC_000023.11"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "A"
+				},
+				"type": "Allele"
+			},
+			"NC_000023.11:1816127:C:C": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1816127,
+						"end": 1816128
+					},
+					"sequence_id": "refseq:NC_000023.11"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "C"
+				},
+				"type": "Allele"
+			},
+			"NC_000024.10:1816127:C:A": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1816127,
+						"end": 1816128
+					},
+					"sequence_id": "refseq:NC_000024.10"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "A"
+				},
+				"type": "Allele"
+			},
+			"NC_000024.10:1816127:C:C": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1816127,
+						"end": 1816128
+					},
+					"sequence_id": "refseq:NC_000024.10"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "C"
+				},
+				"type": "Allele"
+			},
+			"NC_000024.9:1885020:C:A": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1885020,
+						"end": 1885021
+					},
+					"sequence_id": "refseq:NC_000024.9"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "A"
+				},
+				"type": "Allele"
+			},
+			"NC_000024.9:1885020:C:C": {
+				"location": {
+					"type": "SequenceLocation",
+					"interval": {
+						"type": "SimpleInterval",
+						"start": 1885020,
+						"end": 1885021
+					},
+					"sequence_id": "refseq:NC_000024.9"
+				},
+				"state": {
+					"type": "SequenceState",
+					"sequence": "C"
+				},
+				"type": "Allele"
+			}
+		}
+	}
+}
+

@@ -9,9 +9,7 @@ CODE_01='[. as $json |
 $alleles.hgvs[7:9] as $num_chromosome |
 (if $num_chromosome == "23" then "X" elif $num_chromosome == "24" then "Y" else $num_chromosome end) as $chromosome |
 
-select($gene."orientation" == "plus" or $gene."orientation" == "minus" ) |
 select( $alleles."hgvs"| contains(">")) |
-
 
 {
 refsnp_id: ("rs" + .refsnp_id),
@@ -22,7 +20,8 @@ chr_position: ($chromosome + (":" + ($alleles.hgvs / ":")[1] | gsub("[a-zA-Z.>]"
 primary_assembly: "Primary_Assembly",
 citations: ."citations"[]
 }
-]| unique | .[]
+] 
+ 
 '
 
 CODE_02='.[] |
@@ -30,7 +29,6 @@ CODE_02='.[] |
 .refsnp_id,
 .variation,
 .chromosome,
-.gene_orientation,
 .chr_position,
 .primary_assembly,
 .citations
@@ -63,8 +61,8 @@ fi
 # cat part_of_refsnp-chrX.json | jq -r "${CODE}" > temp_file.json
 
 
-#<< COMMENTOUT
+<< COMMENTOUT
 cat temp_file.json | \
-jq -c -r --slurp "${CODE_02}" > final.csv 
+jq -c -r --slurp "${CODE_02}" > final_${INPUT_FILE}.csv 
 
-#COMMENTOUT
+COMMENTOUT
