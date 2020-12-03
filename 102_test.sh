@@ -9,16 +9,34 @@ FORMATTER_FIRST='. |
     genes: .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
   }
 }
-| select( .primary_snapshot_data.alleles.hgvs| contains(">")) 
+| select( .primary_snapshot_data.alleles.hgvs| contains(">")) |
+
+
 '
 
-FILTER_BY_GENE_02='. | .primary_snapshot_data.genes as $genes | select(($genes | length) > 0)'
+FORMATTER_SECOND='. |
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": .primary_snapshot_data.genes[].id,
+  "orientation": .primary_snapshot_data.genes[].orientation,
+  "rna": .primary_snapshot_data.genes[].rnas[]
+}
+'
+
+
+
 FILTER_BY_GENE_01='. | .primary_snapshot_data.genes as $genes | select(($genes | length) == 0)'
+FILTER_BY_GENE_02='. | .primary_snapshot_data.genes as $genes | select(($genes | length) > 0)'
+
+FILTER_BY_GENE_03='. | .primary_snapshot_data.genes[].rnas as $rnas | select($rnas[]|.codon_aligned_transcript_change)'
 
 cat refsnp-chrY.json-1000 | jq "${FORMATTER_FIRST}" > temp_00.json
 
-cat temp_00.json | jq "${FILTER_BY_GENE_02}" > temp_02_gopo.json
 cat temp_00.json | jq "${FILTER_BY_GENE_01}" > temp_01_gxpx.json
+cat temp_00.json | jq "${FILTER_BY_GENE_02}" | jq "${FILTER_BY_GENE_03}"  > temp_02_go.json
+
+cat temp_02_go.json | jq "${FORMATTER_SECOND}" > fdsafaefa
+
 
 FORMATTER_GENE_02='. |
 .primary_snapshot_data.genes as $genes |
@@ -38,10 +56,6 @@ $hgvs[7:9] as $num_chromosome |
   gene_id: $genes[].id,
   rna_id: $genes[].rnas[].id,
   position: $rnas[].codon_aligned_transcript_change.position,
-  transcript_change: 
-($rnas[].codon_aligned_transcript_change.deleted_sequence 
-+ " -> " 
-+ $rnas[].codon_aligned_transcript_change.inserted_sequence),
   chr_position: ($chromosome + (":" + ($hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
   primary_assembly: "Primary_Assembly",
   citations: (if (.citations | length) > 0 then .citations else "" end),
@@ -64,7 +78,6 @@ $hgvs[7:9] as $num_chromosome |
   gene_id: "---",
   rna_id: "---",
   position: 0,
-  transcript_change: "---",
   chr_position: ($chromosome + (":" + ($hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
   primary_assembly: "Primary_Assembly",
   citations: (if (.citations | length) > 0 then .citations else "" end)
@@ -113,7 +126,7 @@ select(.gene_id != "---") |
 | @tsv
 '
 
-cat temp_02_gopo.json | jq "${FORMATTER_GENE_02}" | jq --slurp 'unique' > final_01.json
+cat temp_02_go.json | jq "${FORMATTER_GENE_02}" | jq --slurp 'unique' > final_01.json
 cat temp_01_gxpx.json | jq "${FORMATTER_GENE_01}" | jq --slurp 'unique' >> final_01.json
 
 
