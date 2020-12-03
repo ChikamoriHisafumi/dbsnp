@@ -15,38 +15,43 @@ FORMATTER_FIRST='. |
   primary_snapshot_data:{
     seq_id: .primary_snapshot_data.seq_id,
     alleles: .primary_snapshot_data.alleles,
-
-"genes": 
+    "genes": 
 (if (.primary_snapshot_data.genes | length) == 0 then 
-[
-  {
-    "id": "NM_-------",
-    "codon_aligned_transcript_change": {
-      "seq_id": "NM_-------",
-      "position": 0,
-      "deleted_sequence": "---",
-      "inserted_sequence": "---"
-    },
-    "product_id": "NP_----------",
-    "protein":
-    (if (.primary_snapshot_data.genes[].rnas[] | has("protein") ) then
-{
-      "variant": {
-        "spdi": {
-          "seq_id": "NP_-----------",
-          "position": 0,
-          "deleted_sequence": "-",
-          "inserted_sequence": "-"
+      [
+        {
+          "id": 4023,
+          "orientation": "plus",
+          "rnas": [
+            {
+              "id": "NM_-------",
+              "codon_aligned_transcript_change": {
+                "seq_id": "NM_-------",
+                "position": 0,
+                "deleted_sequence": "---",
+                "inserted_sequence": "---"
+              },
+              "product_id": "NP_----------",
+              "protein": {
+                "variant": {
+                  "spdi": {
+                    "seq_id": "NP_-----------",
+                    "position": 0,
+                    "deleted_sequence": "-",
+                    "inserted_sequence": "-"
+                  }
+                }
+              }, 
+              "hgvs": "NM_-----------:-.000->-"
+            }
+          ] 
         }
-      }
-}
-    else .primary_snapshot_data.genes[].rnas[].protein end),
- 
-    "hgvs": "NM_-----------:-.000->-"
+      ]
+else 
+
+
+.primary_snapshot_data.genes
+end)
   }
-]
-else .primary_snapshot_data.genes end)
-}
 }
 '
 cat refsnp-chrY.json-1000 | jq "${FORMATTER_FIRST}" > temp_00.json
