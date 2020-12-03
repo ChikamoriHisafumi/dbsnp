@@ -33,20 +33,6 @@ gene_orientation:
 else "---" end)
 ,
 gene_id: (if ($genes | length) > 0 then $genes[].id else 0 end),
-rna_id:
-(if ($genes | length) > 0 then
-(if ($genes[].rnas | length) > 0 then
-$genes[].rnas[].id
-else "---" end)
-else "---" end)
-,
-position:
-(if ($genes | length) > 0 then
-(if ($genes[].rnas | length) > 0 then
-$genes[].rnas[].codon_aligned_transcript_change.position
-else "---" end)
-else "---" end)
-,
 chr_position: ($chromosome + (":" + ($alleles.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
 primary_assembly: "Primary_Assembly",
 citations: (if ($citations | length) > 0 then $citations[] else "" end)

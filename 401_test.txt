@@ -1,0 +1,7 @@
+
+rnasの中にrnaが１個以上含まれているかを調べるコマンド。
+
+[tiqua@mydesk dbsnp_format]$ bzcat refsnp-chrY.json.bz2 | jq '. | select((.primary_snapshot_data.allele_annotations[].assembly_annotation[].genes[].rnas | length) == 0) | .'
+
+
+
