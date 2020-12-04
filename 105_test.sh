@@ -1,40 +1,69 @@
 INPUT=$1
 
+TEMP_FILE_G1M_P_1=temp_file_g1m_p_1_${INPUT}.json
+TEMP_FILE_G1M_P_2=temp_file_g1m_p_2_${INPUT}.json
+TEMP_FILE_G1M1P_=temp_file_g1m1p__${INPUT}.json
+TEMP_FILE_G1M0P0=temp_file_g1m0p0_${INPUT}.json
+TEMP_FILE_G1M1P0=temp_file_g1m1p0_${INPUT}.json
+TEMP_FILE_G1M1P1=temp_file_g1m1p1_${INPUT}.json
+
+OUTPUT_TABLE1=table1_${INPUT}.tsv
+OUTPUT_TABLE2=table2_${INPUT}.tsv
+OUTPUT_TABLE3=table3_${INPUT}.tsv
+
 FORMATTER_01='. |
+.primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
 {
   "refsnp_id": .refsnp_id,
   "citations": .citations,
   "psd":{
     "seq_id": .primary_snapshot_data.placements_with_allele[0].seq_id,
-    "alleles": .primary_snapshot_data.placements_with_allele[0].alleles[],
+    "chromosome":
+      (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
+      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
+      else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
+    "als": {
+      "al": {
+        "spdi": {
+          "seq_id": $allele.allele.spdi.seq_id,
+          "pos": $allele.allele.spdi.position,
+          "del": $allele.allele.spdi.deleted_sequence,
+          "ins": $allele.allele.spdi.inserted_sequence
+        },
+        "hgvs": $allele.hgvs
+      }
+    },
     "gs": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
   }
-}
-| select( .psd.alleles.hgvs| contains(">")) 
-'
+} |
 
-FORMATTER_02='. |
-.psd.gs[] as $g  |
+select( .psd.als.al.hgvs| contains(">")) |
+select((.psd.gs | length) > 0) |
+
 {
   "refsnp_id": .refsnp_id,
   "citations": .citations,
   "psd":{
     "seq_id": .psd.seq_id,
-    "als": {
-      "al": {
-        "spdi": {
-          "seq_id": .psd.alleles.allele.spdi.seq_id,
-          "pos": .psd.alleles.allele.spdi.position,
-          "del": .psd.alleles.allele.spdi.deleted_sequence,
-          "ins": .psd.alleles.allele.spdi.inserted_sequence
-        },
-        "hgvs": .psd.alleles.hgvs
-      }
-    },
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": .psd.gs[] 
+  }
+} 
+'
+
+FORMATTER_02='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
     "g": {
-      "id": $g.id,
-      "o": $g.orientation,
-      "r": $g.rnas[]
+      "id": .psd.g.id,
+      "o": .psd.g.orientation,
+      "r": .psd.g.rnas[]
     }
   }
 }
@@ -46,19 +75,8 @@ FORMATTER_03='. |
   "citations": .citations,
   "psd":{
     "seq_id": .psd.seq_id,
-    "chromosome":
-      (if .psd.seq_id[7:9] == "23" then "X" elif .psd.seq_id[7:9] == "24" then "Y" else .psd.seq_id[7:9] end),
-    "als": {
-      "al": {
-        "spdi": {
-          "seq_id": .psd.alleles.allele.spdi.seq_id,
-          "pos": .psd.alleles.allele.spdi.position,
-          "del": .psd.alleles.allele.spdi.deleted_sequence,
-          "ins": .psd.alleles.allele.spdi.inserted_sequence
-        },
-        "hgvs": .psd.alleles.hgvs
-      }
-    },
+    "chromosome": .psd.chromosome,
+    "als": .psd.als, 
     "g": {
       "id": .psd.g.id,
       "o": .psd.g.o,
@@ -92,19 +110,8 @@ FORMATTER_04='. |
   "citations": .citations,
   "psd":{
     "seq_id": .psd.seq_id,
-    "chromosome":
-      (if .psd.seq_id[7:9] == "23" then "X" elif .psd.seq_id[7:9] == "24" then "Y" else .psd.seq_id[7:9] end),
-    "als": {
-      "al": {
-        "spdi": {
-          "seq_id": .psd.alleles.allele.spdi.seq_id,
-          "pos": .psd.alleles.allele.spdi.position,
-          "del": .psd.alleles.allele.spdi.deleted_sequence,
-          "ins": .psd.alleles.allele.spdi.inserted_sequence
-        },
-        "hgvs": .psd.alleles.hgvs
-      }
-    },
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
     "g": {
       "id": .psd.g.id,
       "o": .psd.g.o,
@@ -122,40 +129,52 @@ FORMATTER_04='. |
 }
 '
 
+SECONDS=0
 
+FILE_TYPE=`file ${INPUT}`
+
+if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
+
+  cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+
+elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
+
+  bzcat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+
+fi
 
 
 # Input file.
 
-cat refsnp-chrY.json-1000 | jq "${FORMATTER_01}" > temp_00.json
+cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 # Divide input file into json which does not contain genes info and json which contains 1 or more genes info.
 
-cat temp_00.json | jq 'select((.psd.gs | length) == 0)' > temp_gxmxpx.json
-cat temp_00.json | jq 'select((.psd.gs | length) > 0)' > temp_temp_gom_p_.json
+# cat temp_00.json | jq 'select((.psd.gs | length) == 0)' > temp_gxmxpx.json
+# cat temp_00.json | jq 'select((.psd.gs | length) > 0)' > temp_temp_gom_p_.json
 
 # Format temp_temp_go.json to simpler json
 
-cat temp_temp_gom_p_.json | jq "${FORMATTER_02}" > temp_gom_p_.json
+cat ${TEMP_FILE_G1M_P_1} | jq "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
 
 # Divide temp_go.json into json which does not contain protein info and json which contains protein info.
 
-cat temp_gom_p_.json | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > temp_gomop_.json
-cat temp_gom_p_.json | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' > temp_gomxpx.json
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' > ${TEMP_FILE_G1M0P0}
 
 # Format temp_temp_gomop_.json to simpler json
 
-cat temp_gomop_.json | jq 'select((.psd.g.r.protein | length) > 0)' | jq "${FORMATTER_03}" > temp_gomopo.json
-cat temp_gomop_.json | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${FORMATTER_04}" > temp_gomopx.json
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
 
 
 
-cat temp_gomopx.json temp_gomopo.json | jq -r '. |
+cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
 {
   "refsnp_id": ("rs" + .refsnp_id),
   "variation": (.psd.als.al.spdi.del + "/" + .psd.als.al.spdi.ins),
   "chromosome": .psd.chromosome,
-  "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
+  "orientation": (if .psd.g.orientation == "plus" then "Fwd" elif .psd.g.orientation == "minus" then "Rev" else "---" end),
   "position_chr": (.psd.chromosome + ":" + ((.psd.als.al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
   "sequencing": "Primary_Assembly",
   "citations": (.citations | tostring)
@@ -169,7 +188,7 @@ cat temp_gomopx.json temp_gomopo.json | jq -r '. |
   .sequencing,
   .citations
 ] | @tsv
-' > table1.tsv
+' > ${OUTPUT_TABLE1}
 
 <<temp
 cat temp_gomopx.json | jq '. |
@@ -198,7 +217,7 @@ cat temp_gomopx.json | jq '. |
  
 ' > table2.tsv
 temp
-cat temp_gomopo.json | jq -r '. |
+cat ${TEMP_FILE_G1M1P1} | jq -r '. |
 
 {
   "refsnp_id": .refsnp_id,
@@ -226,18 +245,25 @@ cat temp_gomopo.json | jq -r '. |
   .aa_substitution,
   .undefined
 ] | @tsv
-' >> table2.tsv 
+' > ${OUTPUT_TABLE2} 
 
-cat temp_temp_gom_p_.json | jq '. | 
+cat ${TEMP_FILE_G1M_P_1} | jq '. | 
 {
   "snp_id": .refsnp_id,
-  "gene_id": .psd.gs[].id
+  "gene_id": .psd.g.id
 }' | jq --slurp -r 'unique | .[] |
 [
   .snp_id,
   .gene_id
 ] | @tsv
-' > table3.tsv
+' > ${OUTPUT_TABLE3}
+
+sleep 3
+
+time=$SECONDS
+
+echo 'It took ' $time' seconds to generate 3 table(tsv) files.'
+
 
 #cat refsnp-chrY.json-3 | jq "${FORMATTER_FIRST}" > temp_00.json
 
@@ -250,45 +276,4 @@ cat temp_temp_gom_p_.json | jq '. |
 
 #cat 902_no_gene.json | jq "${FORMATTER_FIRST}" > temp_00.json
 
-
-
-<<COMMENTOUT
-
-
-  {
-    "id": "NM_001243721.1",
-    "codon_aligned_transcript_change": {
-      "seq_id": "NM_001243721.1",
-      "position": 132,
-      "deleted_sequence": "GTA",
-      "inserted_sequence": "GTG"
-    },
-    "sequence_ontology": [
-      {
-        "name": "coding_sequence_variant",
-        "accession": "SO:0001580"
-      }
-    ],
-    "product_id": "NP_001230650.1",
-    "protein": {
-      "variant": {
-        "spdi": {
-          "seq_id": "NP_001230650.1",
-          "position": 44,
-          "deleted_sequence": "V",
-          "inserted_sequence": "V"
-        }
-      },
-      "sequence_ontology": [
-        {
-          "name": "synonymous_variant",
-          "accession": "SO:0001819"
-        }
-      ]
-    },
-    "hgvs": "NM_001243721.1:c.135A>G"
-  },
-
-
-COMMENTOUT
 
