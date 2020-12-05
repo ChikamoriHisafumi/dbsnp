@@ -11,7 +11,7 @@ OUTPUT_TABLE1=table1_${INPUT}.tsv
 OUTPUT_TABLE2=table2_${INPUT}.tsv
 OUTPUT_TABLE3=table3_${INPUT}.tsv
 
-FORMATTER_01='. |
+FORMATTER_01='fromjson? | . |
 .primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
 {
   "refsnp_id": .refsnp_id,
@@ -135,11 +135,11 @@ FILE_TYPE=`file ${INPUT}`
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  cat ${INPUT} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  bzcat ${INPUT} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 fi
 
