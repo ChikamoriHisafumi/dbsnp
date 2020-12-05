@@ -1,15 +1,24 @@
-INPUT=$1
+INPUT_PATH=$1
+INPUT=`basename ${INPUT_PATH}`
 
-TEMP_FILE_G1M_P_1=temp_file_g1m_p_1_${INPUT}.json
-TEMP_FILE_G1M_P_2=temp_file_g1m_p_2_${INPUT}.json
-TEMP_FILE_G1M1P_=temp_file_g1m1p__${INPUT}.json
-TEMP_FILE_G1M0P0=temp_file_g1m0p0_${INPUT}.json
-TEMP_FILE_G1M1P0=temp_file_g1m1p0_${INPUT}.json
-TEMP_FILE_G1M1P1=temp_file_g1m1p1_${INPUT}.json
+if [ ! -d ./temp ]; then
+  mkdir temp 
+fi
 
-OUTPUT_TABLE1=table1_${INPUT}.tsv
-OUTPUT_TABLE2=table2_${INPUT}.tsv
-OUTPUT_TABLE3=table3_${INPUT}.tsv
+if [ ! -d ./TABLE ]; then
+  mkdir TABLE
+fi
+
+TEMP_FILE_G1M_P_1=temp/temp_file_g1m_p_1_${INPUT}.json
+TEMP_FILE_G1M_P_2=temp/temp_file_g1m_p_2_${INPUT}.json
+TEMP_FILE_G1M1P_=temp/temp_file_g1m1p__${INPUT}.json
+TEMP_FILE_G1M0P0=temp/temp_file_g1m0p0_${INPUT}.json
+TEMP_FILE_G1M1P0=temp/temp_file_g1m1p0_${INPUT}.json
+TEMP_FILE_G1M1P1=temp/temp_file_g1m1p1_${INPUT}.json
+
+OUTPUT_TABLE1=TABLE/table1_${INPUT}.tsv
+OUTPUT_TABLE2=TABLE/table2_${INPUT}.tsv
+OUTPUT_TABLE3=TABLE/table3_${INPUT}.tsv
 
 FORMATTER_01='fromjson? | . |
 .primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
@@ -131,22 +140,24 @@ FORMATTER_04='. |
 
 SECONDS=0
 
-FILE_TYPE=`file ${INPUT}`
+# Input file.
+
+FILE_TYPE=`file ${INPUT_PATH}`
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  cat ${INPUT_PATH} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  bzcat ${INPUT_PATH} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 fi
 
 
 # Input file.
 
-cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+# cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 # Divide input file into json which does not contain genes info and json which contains 1 or more genes info.
 
