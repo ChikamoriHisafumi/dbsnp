@@ -20,7 +20,7 @@ OUTPUT_TABLE1=TABLE/table1_${INPUT}.tsv
 OUTPUT_TABLE2=TABLE/table2_${INPUT}.tsv
 OUTPUT_TABLE3=TABLE/table3_${INPUT}.tsv
 
-FORMATTER_01='fromjson? | . |
+FORMATTER_01='. |
 .primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
 {
   "refsnp_id": .refsnp_id,
@@ -146,11 +146,11 @@ FILE_TYPE=`file ${INPUT_PATH}`
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT_PATH} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  cat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT_PATH} | jq -r -R "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  bzcat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 fi
 
@@ -188,7 +188,7 @@ cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
   "orientation": (if .psd.g.orientation == "plus" then "Fwd" elif .psd.g.orientation == "minus" then "Rev" else "---" end),
   "position_chr": (.psd.chromosome + ":" + ((.psd.als.al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
   "sequencing": "Primary_Assembly",
-  "citations": (.citations | tostring)
+  "citations": (.citations | join(";")) 
 } |
 [
   .refsnp_id,
