@@ -94,7 +94,12 @@ FORMATTER_03='. |
           "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
           "pos": .psd.g.r.codon_aligned_transcript_change.position,
           "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
-          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
         },
         "product_id": .psd.g.r.product_id,
         "p": {
@@ -103,7 +108,9 @@ FORMATTER_03='. |
               "seq_id": .psd.g.r.protein.variant.spdi.seq_id,
               "pos": .psd.g.r.protein.variant.spdi.position,
               "del": .psd.g.r.protein.variant.spdi.deleted_sequence,
-              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence
+              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence,
+              "d_i": (.psd.g.r.protein.variant.spdi.deleted_sequence + " -> "
+                + .psd.g.r.protein.variant.spdi.inserted_sequence)
             }
           }
         },
@@ -129,8 +136,26 @@ FORMATTER_04='. |
           "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
           "pos": .psd.g.r.codon_aligned_transcript_change.position,
           "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
-          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
         },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": 0,
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+
         "hgvs": .psd.g.r.hgvs
       }
     }
@@ -183,12 +208,23 @@ cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${
 cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
 {
   "refsnp_id": ("rs" + .refsnp_id),
-  "variation": (.psd.als.al.spdi.del + "/" + .psd.als.al.spdi.ins),
+  "variation": (.psd.als.al.spdi.del + ">" + .psd.als.al.spdi.ins),
   "chromosome": .psd.chromosome,
   "orientation": (if .psd.g.orientation == "plus" then "Fwd" elif .psd.g.orientation == "minus" then "Rev" else "---" end),
   "position_chr": (.psd.chromosome + ":" + ((.psd.als.al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
   "sequencing": "Primary_Assembly",
   "citations": (.citations | join(";")) 
+}' | jq -s -r '. | 
+group_by(.refsnp_id) | .[] |
+{
+  "refsnp_id": ([.[].refsnp_id] | unique)[],
+  "variation": ([.[].variation] | unique | join(" / ")),
+  "chromosome": ([.[].chromosome] | unique)[],
+  "orientation": ([.[].orientation] | unique)[],
+  "position_chr": ([.[].position_chr] | unique)[],
+  "sequencing": "Primary_Assembly",
+  "citations": ([.[].citations] | unique)[]
+
 } |
 [
   .refsnp_id,
@@ -201,34 +237,8 @@ cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
 ] | @tsv
 ' > ${OUTPUT_TABLE1}
 
-<<temp
-cat temp_gomopx.json | jq '. |
-
-{
-  "refsnp_id": .refsnp_id,
-  "gene_id": .psd.g.id,
-  "accession_no_r": .psd.g.r.catc.seq_id,
-  "position_r": .psd.g.r.catc.pos,
-  "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
-  "base_substitution": (.psd.als.al.spdi.del + " -> " + .psd.als.al.spdi.ins)
-} |
-[
-  .refsnp_id,
-  .gene_id,
-  .accession_no_r,
-  .position_r,
-  .orientation,
-  .base_substitution,
-  "",
-  0,
-  ,
-  .aa_substitution,
-  .undefined
-] | @tsv
- 
-' > table2.tsv
-temp
-cat ${TEMP_FILE_G1M1P1} | jq -r '. |
+# cat ${TEMP_FILE_G1M1P1} | jq -r '. |
+cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} | jq -r '. |
 
 {
   "refsnp_id": .refsnp_id,
@@ -240,8 +250,8 @@ cat ${TEMP_FILE_G1M1P1} | jq -r '. |
   "codon_change": (.psd.g.r.catc.del + " -> " + .psd.g.r.catc.ins),
   "accession_no_p": .psd.g.r.product_id,
   "position_p": .psd.g.r.p.v.spdi.position,
-  "aa_substitution": (.psd.g.r.p.v.spdi.del + " -> " + .psd.g.r.p.v.spdi.ins),
-  "undefined": 0
+  "aa_substitution": .psd.g.r.p.v.spdi.d_i,
+  "SO_id": .psd.g.r.so.accession
 } |
 [
   .refsnp_id,
@@ -254,7 +264,7 @@ cat ${TEMP_FILE_G1M1P1} | jq -r '. |
   .accession_no_p,
   .position_p,
   .aa_substitution,
-  .undefined
+  .SO_id
 ] | @tsv
 ' > ${OUTPUT_TABLE2} 
 
