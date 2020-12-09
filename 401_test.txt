@@ -5,6 +5,49 @@ rnasの中にrnaが１個以上含まれているかを調べるコマンド。
 
 rnaの中においてどのようなkeyの組み合わせがあるかを調べるコマンド。
 
+[tiqua@mydesk dbsnp_format]$ bzcat refsnp-chrY.json.bz2 | jq '.primary_snapshot_data.allele_annotations[].assembly_annotation[].genes[].rnas[] | {"keys": keys}' | jq -s 'unique'
+[
+  {
+    "keys": [
+      "codon_aligned_transcript_change",
+      "hgvs",
+      "id",
+      "product_id",
+      "protein",
+      "sequence_ontology"
+    ]
+  },
+  {
+    "keys": [
+      "codon_aligned_transcript_change",
+      "hgvs",
+      "id",
+      "sequence_ontology"
+    ]
+  },
+  {
+    "keys": [
+      "hgvs",
+      "id",
+      "product_id",
+      "sequence_ontology"
+    ]
+  },
+  {
+    "keys": [
+      "id",
+      "product_id",
+      "sequence_ontology"
+    ]
+  },
+  {
+    "keys": [
+      "id",
+      "sequence_ontology"
+    ]
+  }
+]
+
 [tiqua@mydesk dbsnp_format]$ cat refsnp-chrY.json-1000 | jq '.primary_snapshot_data.allele_annotations[].assembly_annotation[].genes[].rnas[] | {"keys": keys}' | jq -s 'unique'
 [
   {

@@ -78,6 +78,18 @@ FORMATTER_02='. |
 }
 '
 
+# for this pattern, use FORMATTER_03
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "protein",
+#      "sequence_ontology"
+#    ]
+#  }
+
 FORMATTER_03='. |
 {
   "refsnp_id": .refsnp_id,
@@ -90,6 +102,7 @@ FORMATTER_03='. |
       "id": .psd.g.id,
       "o": .psd.g.o,
       "r": {
+        "id": .psd.g.r.id,
         "catc": {
           "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
           "pos": .psd.g.r.codon_aligned_transcript_change.position,
@@ -120,6 +133,17 @@ FORMATTER_03='. |
   }
 }
 '
+
+# for this pattern, use FORMATTER_04
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
 FORMATTER_04='. |
 {
   "refsnp_id": .refsnp_id,
@@ -132,6 +156,7 @@ FORMATTER_04='. |
       "id": .psd.g.id,
       "o": .psd.g.o,
       "r": {
+        "id": .psd.g.r.id,
         "catc": {
           "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
           "pos": .psd.g.r.codon_aligned_transcript_change.position,
@@ -143,7 +168,7 @@ FORMATTER_04='. |
         "so": {
           "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
         },
-        "product_id": 0,
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
         "p": {
           "v": {
             "spdi": {
@@ -162,6 +187,73 @@ FORMATTER_04='. |
   }
 }
 '
+
+# for this pattern, use FORMATTER_05
+#  {
+#    "keys": [
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_05='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": "---",
+          "pos": 0,
+          "del": "-",
+          "ins": "-",
+          "d_i": "---"
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
 
 SECONDS=0
 
@@ -196,7 +288,7 @@ cat ${TEMP_FILE_G1M_P_1} | jq "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
 # Divide temp_go.json into json which does not contain protein info and json which contains protein info.
 
 cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
-cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' > ${TEMP_FILE_G1M0P0}
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | jq "${FORMATTER_05}" > ${TEMP_FILE_G1M0P0}
 
 # Format temp_temp_gomop_.json to simpler json
 
@@ -238,21 +330,21 @@ group_by(.refsnp_id) | .[] |
 ' > ${OUTPUT_TABLE1}
 
 # cat ${TEMP_FILE_G1M1P1} | jq -r '. |
-cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} | jq -r '. |
+cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
 
 {
   "refsnp_id": .refsnp_id,
   "gene_id": .psd.g.id,
-  "accession_no_r": .psd.g.r.catc.seq_id,
+  "accession_no_r": .psd.g.r.id,
   "position_r": .psd.g.r.catc.pos,
   "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
   "base_substitution": (.psd.als.al.spdi.del + " -> " + .psd.als.al.spdi.ins),
-  "codon_change": (.psd.g.r.catc.del + " -> " + .psd.g.r.catc.ins),
+  "codon_change": .psd.g.r.catc.d_i,
   "accession_no_p": .psd.g.r.product_id,
   "position_p": .psd.g.r.p.v.spdi.position,
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
-} |
+}' | jq -s -r 'unique | .[] |
 [
   .refsnp_id,
   .gene_id,
