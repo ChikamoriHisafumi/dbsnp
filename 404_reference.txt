@@ -1,0 +1,40 @@
+[tiqua@mydesk dbsnp_format]$ cat temp/temp_file_g1m1p__refsnp-chrY.json-1000.json | jq '{"acc": .psd.g.r.sequence_ontology[].accession}' | jq -s 'unique'
+[
+  {
+    "acc": "SO:0001580"
+  },
+  {
+    "acc": "SO:0001619"
+  }
+]
+[tiqua@mydesk dbsnp_format]$ cat refsnp-chrY.json-1000 | jq '{"acc": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes[].rnas[].sequence_ontology[].accession}' | jq -s 'unique'
+[
+  {
+    "acc": "SO:0001580"
+  },
+  {
+    "acc": "SO:0001619"
+  },
+  {
+    "acc": "SO:0001623"
+  },
+  {
+    "acc": "SO:0001624"
+  },
+  {
+    "acc": "SO:0001627"
+  },
+  {
+    "acc": "SO:0001986"
+  },
+  {
+    "acc": "SO:0001987"
+  },
+  {
+    "acc": "SO:0002152"
+  },
+  {
+    "acc": "SO:0002153"
+  }
+]
+

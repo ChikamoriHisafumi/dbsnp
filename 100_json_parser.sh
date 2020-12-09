@@ -1,0 +1,392 @@
+INPUT_PATH=$1
+INPUT=`basename ${INPUT_PATH}`
+
+if [ ! -d ./temp ]; then
+  mkdir temp 
+fi
+
+if [ ! -d ./TABLE ]; then
+  mkdir TABLE
+fi
+
+TEMP_FILE_G1M_P_1=temp/temp_file_g1m_p_1_${INPUT}.json
+TEMP_FILE_G1M_P_2=temp/temp_file_g1m_p_2_${INPUT}.json
+TEMP_FILE_G1M1P_=temp/temp_file_g1m1p__${INPUT}.json
+TEMP_FILE_G1M0P0=temp/temp_file_g1m0p0_${INPUT}.json
+TEMP_FILE_G1M1P0=temp/temp_file_g1m1p0_${INPUT}.json
+TEMP_FILE_G1M1P1=temp/temp_file_g1m1p1_${INPUT}.json
+
+OUTPUT_TABLE1=TABLE/table1_${INPUT}.tsv
+OUTPUT_TABLE2=TABLE/table2_${INPUT}.tsv
+OUTPUT_TABLE3=TABLE/table3_${INPUT}.tsv
+
+FORMATTER_01='. |
+.primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .primary_snapshot_data.placements_with_allele[0].seq_id,
+    "chromosome":
+      (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
+      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
+      else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
+    "als": {
+      "al": {
+        "spdi": {
+          "seq_id": $allele.allele.spdi.seq_id,
+          "pos": $allele.allele.spdi.position,
+          "del": $allele.allele.spdi.deleted_sequence,
+          "ins": $allele.allele.spdi.inserted_sequence
+        },
+        "hgvs": $allele.hgvs
+      }
+    },
+    "gs": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
+  }
+} |
+
+select( .psd.als.al.hgvs| contains(">")) |
+select((.psd.gs | length) > 0) |
+
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": .psd.gs[] 
+  }
+} 
+'
+
+FORMATTER_02='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.orientation,
+      "r": .psd.g.rnas[]
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_03
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "protein",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_03='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als, 
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": .psd.g.r.product_id,
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": .psd.g.r.protein.variant.spdi.seq_id,
+              "pos": .psd.g.r.protein.variant.spdi.position,
+              "del": .psd.g.r.protein.variant.spdi.deleted_sequence,
+              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence,
+              "d_i": (.psd.g.r.protein.variant.spdi.deleted_sequence + " -> "
+                + .psd.g.r.protein.variant.spdi.inserted_sequence)
+            }
+          }
+        },
+        "hgvs": .psd.g.r.hgvs
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_04
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_04='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+
+        "hgvs": .psd.g.r.hgvs
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_05
+#  {
+#    "keys": [
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_05='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": "---",
+          "pos": 0,
+          "del": "-",
+          "ins": "-",
+          "d_i": "---"
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
+
+SECONDS=0
+
+# Input file.
+
+FILE_TYPE=`file ${INPUT_PATH}`
+
+if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
+
+  cat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+
+elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
+
+  bzcat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+
+fi
+
+
+# Input file.
+
+# cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+
+# Divide input file into json which does not contain genes info and json which contains 1 or more genes info.
+
+# cat temp_00.json | jq 'select((.psd.gs | length) == 0)' > temp_gxmxpx.json
+# cat temp_00.json | jq 'select((.psd.gs | length) > 0)' > temp_temp_gom_p_.json
+
+# Format temp_temp_go.json to simpler json
+
+cat ${TEMP_FILE_G1M_P_1} | jq "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
+
+# Divide temp_go.json into json which does not contain protein info and json which contains protein info.
+
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | jq "${FORMATTER_05}" > ${TEMP_FILE_G1M0P0}
+
+# Format temp_temp_gomop_.json to simpler json
+
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
+
+
+
+cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
+{
+  "refsnp_id": ("rs" + .refsnp_id),
+  "variation": (.psd.als.al.spdi.del + ">" + .psd.als.al.spdi.ins),
+  "chromosome": .psd.chromosome,
+  "orientation": (if .psd.g.orientation == "plus" then "Fwd" elif .psd.g.orientation == "minus" then "Rev" else "---" end),
+  "position_chr": (.psd.chromosome + ":" + ((.psd.als.al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
+  "sequencing": "Primary_Assembly",
+  "citations": (.citations | join(";")) 
+}' | jq -s -r '. | 
+group_by(.refsnp_id) | .[] |
+{
+  "refsnp_id": ([.[].refsnp_id] | unique)[],
+  "variation": ([.[].variation] | unique | join(" / ")),
+  "chromosome": ([.[].chromosome] | unique)[],
+  "orientation": ([.[].orientation] | unique)[],
+  "position_chr": ([.[].position_chr] | unique)[],
+  "sequencing": "Primary_Assembly",
+  "citations": ([.[].citations] | unique)[]
+
+} |
+[
+  .refsnp_id,
+  .variation,
+  .chromosome,
+  .orientation,
+  .position_chr,
+  .sequencing,
+  .citations
+] | @tsv
+' > ${OUTPUT_TABLE1}
+
+# cat ${TEMP_FILE_G1M1P1} | jq -r '. |
+cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
+
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": .psd.g.id,
+  "accession_no_r": .psd.g.r.id,
+  "position_r": .psd.g.r.catc.pos,
+  "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
+  "base_substitution": (.psd.als.al.spdi.del + " -> " + .psd.als.al.spdi.ins),
+  "codon_change": .psd.g.r.catc.d_i,
+  "accession_no_p": .psd.g.r.product_id,
+  "position_p": .psd.g.r.p.v.spdi.position,
+  "aa_substitution": .psd.g.r.p.v.spdi.d_i,
+  "SO_id": .psd.g.r.so.accession
+}' | jq -s -r 'unique | .[] |
+[
+  .refsnp_id,
+  .gene_id,
+  .accession_no_r,
+  .position_r,
+  .orientation,
+  .base_substitution,
+  .codon_change,
+  .accession_no_p,
+  .position_p,
+  .aa_substitution,
+  .SO_id
+] | @tsv
+' > ${OUTPUT_TABLE2} 
+
+cat ${TEMP_FILE_G1M_P_1} | jq '. | 
+{
+  "snp_id": .refsnp_id,
+  "gene_id": .psd.g.id
+}' | jq --slurp -r 'unique | .[] |
+[
+  .snp_id,
+  .gene_id
+] | @tsv
+' > ${OUTPUT_TABLE3}
+
+sleep 3
+
+time=$SECONDS
+
+echo 'It took ' $time' seconds to generate 3 table(tsv) files.'
+
+
+#cat refsnp-chrY.json-3 | jq "${FORMATTER_FIRST}" > temp_00.json
+
+
+#cat ${INPUT} | jq "${FORMATTER_FIRST}"  > temp_000.json
+#echo 'temp_000 generated'
+#cat temp_0000.json | jq "${FORMATTER_SECOND}" > temp_00.json
+
+
+
+#cat 902_no_gene.json | jq "${FORMATTER_FIRST}" > temp_00.json
+
+
