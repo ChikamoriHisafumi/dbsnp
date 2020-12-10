@@ -1,3 +1,6 @@
+. ./settings.txt
+
+PATH=${ADDITIONAL_PATH}:$PATH
 INPUT_PATH=$1
 INPUT=`basename ${INPUT_PATH}`
 
