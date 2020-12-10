@@ -1,6 +1,4 @@
 
-ADDITIONAL_PATH=
-
 FTP_URL=https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/
 
 ARR_CHR_BZ2=(\
