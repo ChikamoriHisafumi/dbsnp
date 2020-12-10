@@ -356,10 +356,10 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
   "accession_no_r": .psd.g.r.id,
   "position_r": .psd.g.r.catc.pos,
   "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
-  "base_substitution": (.psd.als.al.spdi.del + " -> " + .psd.als.al.spdi.ins),
+  "base_substitution": (if .psd.g.r.hgvs | contains("=") then "---" else (.psd.g.r.hgvs[-3:] | gsub(">";" -> ")) end),
   "codon_change": .psd.g.r.catc.d_i,
   "accession_no_p": .psd.g.r.product_id,
-  "position_p": .psd.g.r.p.v.spdi.position,
+  "position_p": .psd.g.r.p.v.spdi.pos,
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
 }' | jq -s -r ' .[] |
