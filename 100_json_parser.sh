@@ -271,7 +271,6 @@ elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
 fi
 
-
 # Input file.
 
 # cat ${INPUT} | jq "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
@@ -295,7 +294,14 @@ cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change 
 cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
 cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
 
+sleep 3
 
+time=$SECONDS
+
+echo 'It took ' $time' seconds to generate temporary formatted files.'
+
+
+SECONDS=0
 
 cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
 {
@@ -329,6 +335,15 @@ group_by(.refsnp_id) | .[] |
 ] | @tsv
 ' > ${OUTPUT_TABLE1}
 
+sleep 3
+
+time=$SECONDS
+
+echo 'It took ' $time' seconds to generate table1 file.'
+
+
+SECONDS=0
+
 # cat ${TEMP_FILE_G1M1P1} | jq -r '. |
 cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
 
@@ -344,7 +359,7 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
   "position_p": .psd.g.r.p.v.spdi.position,
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
-}' | jq -s -r 'unique | .[] |
+}' | jq -s -r ' .[] |
 [
   .refsnp_id,
   .gene_id,
@@ -359,6 +374,15 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
   .SO_id
 ] | @tsv
 ' > ${OUTPUT_TABLE2} 
+
+sleep 3
+
+time=$SECONDS
+
+echo 'It took ' $time' seconds to generate table2 file.'
+
+
+SECONDS=0
 
 cat ${TEMP_FILE_G1M_P_1} | jq '. | 
 {
@@ -375,7 +399,7 @@ sleep 3
 
 time=$SECONDS
 
-echo 'It took ' $time' seconds to generate 3 table(tsv) files.'
+echo 'It took ' $time' seconds to generate table3 file.'
 
 
 #cat refsnp-chrY.json-3 | jq "${FORMATTER_FIRST}" > temp_00.json
