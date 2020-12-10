@@ -387,11 +387,15 @@ SECONDS=0
 cat ${TEMP_FILE_G1M_P_1} | jq '. | 
 {
   "snp_id": .refsnp_id,
-  "gene_id": .psd.g.id
+  "gene_id": .psd.g.id,
+  "so": {
+    "accession": ([.psd.g.sequence_ontology[].accession] | join(";"))
+  },
 }' | jq --slurp -r 'unique | .[] |
 [
   .snp_id,
-  .gene_id
+  .gene_id,
+  .so.accession
 ] | @tsv
 ' > ${OUTPUT_TABLE3}
 
