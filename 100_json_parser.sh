@@ -12,6 +12,14 @@ if [ ! -d ./TABLE ]; then
   mkdir TABLE
 fi
 
+DATESTR=`date +%Y%m%d-%H%M%S`
+
+LOGFILE=log_${DATESTR}_${INPUT}.log
+
+if [ ! -d ./LOG ]; then
+  mkdir LOG   >> LOG/${LOGFILE}
+fi
+
 TEMP_FILE_G1M_P_1=temp/temp_file_g1m_p_1_${INPUT}.json
 TEMP_FILE_G1M_P_2=temp/temp_file_g1m_p_2_${INPUT}.json
 TEMP_FILE_G1M1P_=temp/temp_file_g1m1p__${INPUT}.json
@@ -50,7 +58,6 @@ FORMATTER_01='. |
 } |
 
 select( .psd.als.al.hgvs| contains(">")) |
-select((.psd.gs | length) > 0) |
 
 {
   "refsnp_id": .refsnp_id,
@@ -59,12 +66,15 @@ select((.psd.gs | length) > 0) |
     "seq_id": .psd.seq_id,
     "chromosome": .psd.chromosome,
     "als": .psd.als,
-    "g": .psd.gs[] 
+    "gs": .psd.gs
   }
 } 
 '
 
 FORMATTER_02='. |
+
+select((.psd.gs | length) > 0) |
+.psd.gs[] as $g |
 {
   "refsnp_id": .refsnp_id,
   "citations": .citations,
@@ -73,9 +83,9 @@ FORMATTER_02='. |
     "chromosome": .psd.chromosome,
     "als": .psd.als,
     "g": {
-      "id": .psd.g.id,
-      "o": .psd.g.orientation,
-      "r": .psd.g.rnas[]
+      "id": $g.id,
+      "o": $g.orientation,
+      "r": $g.rnas[]
     }
   }
 }
@@ -299,9 +309,10 @@ cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${
 
 sleep 3
 
-time=$SECONDS
+time_1=$SECONDS
 
-echo 'It took ' $time' seconds to generate temporary formatted files.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.' >> LOG/${LOGFILE}
 
 
 SECONDS=0
@@ -340,9 +351,10 @@ group_by(.refsnp_id) | .[] |
 
 sleep 3
 
-time=$SECONDS
+time_2=$SECONDS
 
-echo 'It took ' $time' seconds to generate table1 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_2}' seconds to generate table1 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_2}' seconds to generate table1 file.' >> LOG/${LOGFILE}
 
 
 SECONDS=0
@@ -380,14 +392,16 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
 
 sleep 3
 
-time=$SECONDS
+time_3=$SECONDS
 
-echo 'It took ' $time' seconds to generate table2 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_3}' seconds to generate table2 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_3}' seconds to generate table2 file.' >> LOG/${LOGFILE}
 
 
 SECONDS=0
 
-cat ${TEMP_FILE_G1M_P_1} | jq '. | 
+cat ${TEMP_FILE_G1M_P_1} | jq '. |
+select((.psd.gs | length) > 0) |
 {
   "snp_id": .refsnp_id,
   "gene_id": .psd.g.id,
@@ -404,20 +418,14 @@ cat ${TEMP_FILE_G1M_P_1} | jq '. |
 
 sleep 3
 
-time=$SECONDS
+time_4=$SECONDS
 
-echo 'It took ' $time' seconds to generate table3 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_4}' seconds to generate table3 file.'
+echo '[from file:'${INPUT_PATH}'] It took '${time_4}' seconds to generate table3 file.' >> LOG/${LOGFILE}
 
+time_all=$((${time_1}+${time_2}+${time_3}+${time_4}))
 
-#cat refsnp-chrY.json-3 | jq "${FORMATTER_FIRST}" > temp_00.json
-
-
-#cat ${INPUT} | jq "${FORMATTER_FIRST}"  > temp_000.json
-#echo 'temp_000 generated'
-#cat temp_0000.json | jq "${FORMATTER_SECOND}" > temp_00.json
-
-
-
-#cat 902_no_gene.json | jq "${FORMATTER_FIRST}" > temp_00.json
-
+echo '[from file:'${INPUT_PATH}'] Totally it took '${time_all}' seconds to generate all table file.'
+echo '[from file:'${INPUT_PATH}'] Totally it took '${time_all}' seconds to generate all table file.' >> LOG/${LOGFILE}
+echo ''  >> LOG/${LOGFILE}
 
