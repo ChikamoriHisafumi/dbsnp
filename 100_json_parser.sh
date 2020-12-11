@@ -310,8 +310,10 @@ cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${
 sleep 3
 
 time_1=$SECONDS
-log_1='[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.'
+log_1='It took '${time_1}' seconds to generate temporary formatted files.'
 
+echo '[from file:'${INPUT_PATH}']'
+echo '[from file:'${INPUT_PATH}']' >> LOG/${LOGFILE}
 echo ${log_1}
 echo ${log_1} >> LOG/${LOGFILE}
 
@@ -368,12 +370,12 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
   "refsnp_id": .refsnp_id,
   "gene_id": .psd.g.id,
   "accession_no_r": .psd.g.r.id,
-  "position_r": .psd.g.r.catc.pos,
+  "position_r": (.psd.g.r.catc.pos + 1),
   "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
   "base_substitution": (if .psd.g.r.hgvs | contains("=") then "---" else (.psd.g.r.hgvs[-3:] | gsub(">";" -> ")) end),
   "codon_change": .psd.g.r.catc.d_i,
   "accession_no_p": .psd.g.r.product_id,
-  "position_p": .psd.g.r.p.v.spdi.pos,
+  "position_p": (.psd.g.r.p.v.spdi.pos + 1),
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
 }' | jq -s -r ' .[] |
