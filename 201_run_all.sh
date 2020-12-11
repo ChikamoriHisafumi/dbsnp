@@ -9,9 +9,4 @@ do
   sh 100_json_parser.sh ${BZ2_DIR}/$i
 done
 
-~
-~
-~
-~
-~
 
