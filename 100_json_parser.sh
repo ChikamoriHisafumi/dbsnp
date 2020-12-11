@@ -310,9 +310,10 @@ cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${
 sleep 3
 
 time_1=$SECONDS
+log_1='[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.'
 
-echo '[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.'
-echo '[from file:'${INPUT_PATH}'] It took '${time_1}' seconds to generate temporary formatted files.' >> LOG/${LOGFILE}
+echo ${log_1}
+echo ${log_1} >> LOG/${LOGFILE}
 
 
 SECONDS=0
@@ -352,9 +353,10 @@ group_by(.refsnp_id) | .[] |
 sleep 3
 
 time_2=$SECONDS
+log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_TABLE1}').'
 
-echo '[from file:'${INPUT_PATH}'] It took '${time_2}' seconds to generate table1 file.'
-echo '[from file:'${INPUT_PATH}'] It took '${time_2}' seconds to generate table1 file.' >> LOG/${LOGFILE}
+echo ${log_2}
+echo ${log_2} >> LOG/${LOGFILE}
 
 
 SECONDS=0
@@ -393,20 +395,22 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
 sleep 3
 
 time_3=$SECONDS
+log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_TABLE2}').'
 
-echo '[from file:'${INPUT_PATH}'] It took '${time_3}' seconds to generate table2 file.'
-echo '[from file:'${INPUT_PATH}'] It took '${time_3}' seconds to generate table2 file.' >> LOG/${LOGFILE}
+echo ${log_3}
+echo ${log_3} >> LOG/${LOGFILE}
 
 
 SECONDS=0
 
 cat ${TEMP_FILE_G1M_P_1} | jq '. |
 select((.psd.gs | length) > 0) |
+.psd.gs[] as $g |
 {
   "snp_id": .refsnp_id,
-  "gene_id": .psd.g.id,
+  "gene_id": $g.id,
   "so": {
-    "accession": ([.psd.g.sequence_ontology[].accession] | join(";"))
+    "accession": ([$g.sequence_ontology[].accession] | join(";"))
   },
 }' | jq --slurp -r 'unique | .[] |
 [
@@ -419,13 +423,16 @@ select((.psd.gs | length) > 0) |
 sleep 3
 
 time_4=$SECONDS
+log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}').'
 
-echo '[from file:'${INPUT_PATH}'] It took '${time_4}' seconds to generate table3 file.'
-echo '[from file:'${INPUT_PATH}'] It took '${time_4}' seconds to generate table3 file.' >> LOG/${LOGFILE}
+echo ${log_4}
+echo ${log_4} >> LOG/${LOGFILE}
 
 time_all=$((${time_1}+${time_2}+${time_3}+${time_4}))
+log_all='Totally it took '${time_all}' seconds to generate all table file.'
 
-echo '[from file:'${INPUT_PATH}'] Totally it took '${time_all}' seconds to generate all table file.'
-echo '[from file:'${INPUT_PATH}'] Totally it took '${time_all}' seconds to generate all table file.' >> LOG/${LOGFILE}
+
+echo ${log_all}
+echo ${log_all} >> LOG/${LOGFILE}
 echo ''  >> LOG/${LOGFILE}
 
