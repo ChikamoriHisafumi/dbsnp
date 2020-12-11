@@ -11,6 +11,7 @@ fi
 for i in "${ARR_CHR_BZ2_3[@]}"
 do
   wget -P ${BZ2_DIR} ${FTP_URL}$i
-  sh 100_json_parser.sh ${BZ2_DIR}/$i
+  echo $i' is Downloaded'
+#  sh 100_json_parser.sh ${BZ2_DIR}/$i
 done
 
