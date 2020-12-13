@@ -288,11 +288,11 @@ FILE_TYPE=`file ${INPUT_PATH}`
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  cat ${INPUT_PATH} | jq -r -c "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT_PATH} | jq -r "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  bzcat ${INPUT_PATH} | jq -r -c "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
 
 fi
 
@@ -307,17 +307,17 @@ fi
 
 # Format temp_temp_go.json to simpler json
 
-cat ${TEMP_FILE_G1M_P_1} | jq "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
+cat ${TEMP_FILE_G1M_P_1} | jq -c "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
 
 # Divide temp_go.json into json which does not contain protein info and json which contains protein info.
 
-cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
-cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | jq "${FORMATTER_05}" > ${TEMP_FILE_G1M0P0}
+cat ${TEMP_FILE_G1M_P_2} | jq -c 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | jq -c "${FORMATTER_05}" > ${TEMP_FILE_G1M0P0}
 
 # Format temp_temp_gomop_.json to simpler json
 
-cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
-cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq -c "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq -c "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
 
 sleep 3
 
