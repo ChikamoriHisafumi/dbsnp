@@ -1,6 +1,10 @@
 # Please input one of TEMP_FILE_G1M1P1, TEMP_FILE_G1M1P0 or TEMP_FILE_G1M0P0 files as $1.
 # $2 is destination of output.
 
+. ./settings.txt
+
+PATH=${ADDITIONAL_PATH}:$PATH
+
 cat $1 | jq -r '. |
 
 {
