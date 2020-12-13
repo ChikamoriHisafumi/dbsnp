@@ -1,5 +1,13 @@
 . ./settings.txt
 
+getFileSize(){
+
+  FILESIZE=`wc -c $1 | cut -d' ' -f1`
+  STR_FILESIZE=`numfmt --format="%'f" ${FILESIZE}`' bytes'
+  echo ${STR_FILESIZE}
+
+}
+
 PATH=${ADDITIONAL_PATH}:$PATH
 INPUT_PATH=$1
 INPUT=`basename ${INPUT_PATH}`
@@ -12,12 +20,16 @@ if [ ! -d ./TABLE ]; then
   mkdir TABLE
 fi
 
+if [ ! -d ./LOG ]; then
+  mkdir LOG
+fi
+
 DATESTR=`date +%Y%m%d-%H%M%S`
 
 LOGFILE=log_${DATESTR}_${INPUT}.log
 
 if [ ! -d ./LOG ]; then
-  mkdir LOG   >> LOG/${LOGFILE}
+  mkdir LOG   > LOG/${LOGFILE}
 fi
 
 TEMP_FILE_G1M_P_1=temp/temp_file_g1m_p_1_${INPUT}.json
@@ -355,7 +367,7 @@ group_by(.refsnp_id) | .[] |
 sleep 3
 
 time_2=$SECONDS
-log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_TABLE1}').'
+log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_TABLE1}': '`getFileSize ${OUTPUT_TABLE1}`').'
 
 echo ${log_2}
 echo ${log_2} >> LOG/${LOGFILE}
@@ -397,7 +409,7 @@ cat ${TEMP_FILE_G1M1P1} ${TEMP_FILE_G1M1P0} ${TEMP_FILE_G1M0P0}| jq -r '. |
 sleep 3
 
 time_3=$SECONDS
-log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_TABLE2}').'
+log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_TABLE2}': '`getFileSize ${OUTPUT_TABLE2}`').'
 
 echo ${log_3}
 echo ${log_3} >> LOG/${LOGFILE}
@@ -425,7 +437,7 @@ select((.psd.gs | length) > 0) |
 sleep 3
 
 time_4=$SECONDS
-log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}').'
+log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}': '`getFileSize ${OUTPUT_TABLE3}`' bytes).'
 
 echo ${log_4}
 echo ${log_4} >> LOG/${LOGFILE}
@@ -437,4 +449,5 @@ log_all='Totally it took '${time_all}' seconds to generate all table file.'
 echo ${log_all}
 echo ${log_all} >> LOG/${LOGFILE}
 echo ''  >> LOG/${LOGFILE}
+
 

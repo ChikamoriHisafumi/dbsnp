@@ -36,12 +36,12 @@ ARR_CHR_BZ2_3=(\
 refsnp-chrMT.json.bz2 \
 refsnp-chrX.json.bz2 \
 refsnp-chrY.json.bz2 \
-refsnp-merged.json.bz2 \
-refsnp-nosnppos.json.bz2 \
+# refsnp-merged.json.bz2 \
+# refsnp-nosnppos.json.bz2 \
 refsnp-other.json.bz2 \
 refsnp-sample.json.bz2 \
-refsnp-unsupported.json.bz2 \
-refsnp-withdrawn.json.bz2 \
+# refsnp-unsupported.json.bz2 \
+# refsnp-withdrawn.json.bz2 \
 )
 
 # for i in "${ARR_CHR_BZ2_1[@]}"
