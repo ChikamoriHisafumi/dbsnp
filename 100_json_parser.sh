@@ -1,12 +1,5 @@
 . ./settings.txt
-
-getFileSize(){
-
-  FILESIZE=`wc -c $1 | cut -d' ' -f1`
-  STR_FILESIZE=`numfmt --format="%'f" ${FILESIZE}`' bytes'
-  echo ${STR_FILESIZE}
-
-}
+. ./002_constant.txt
 
 PATH=${ADDITIONAL_PATH}:$PATH
 INPUT_PATH=$1
@@ -43,243 +36,6 @@ OUTPUT_TABLE1=TABLE/table1_${INPUT}.tsv
 OUTPUT_TABLE2=TABLE/table2_${INPUT}.tsv
 OUTPUT_TABLE3=TABLE/table3_${INPUT}.tsv
 
-FORMATTER_01='. |
-.primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .primary_snapshot_data.placements_with_allele[0].seq_id,
-    "chromosome":
-      (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
-      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
-      else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
-    "als": {
-      "al": {
-        "spdi": {
-          "seq_id": $allele.allele.spdi.seq_id,
-          "pos": $allele.allele.spdi.position,
-          "del": $allele.allele.spdi.deleted_sequence,
-          "ins": $allele.allele.spdi.inserted_sequence
-        },
-        "hgvs": $allele.hgvs
-      }
-    },
-    "gs": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
-  }
-} |
-
-select( .psd.als.al.hgvs| contains(">")) |
-
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .psd.seq_id,
-    "chromosome": .psd.chromosome,
-    "als": .psd.als,
-    "gs": .psd.gs
-  }
-} 
-'
-
-FORMATTER_02='. |
-
-select((.psd.gs | length) > 0) |
-.psd.gs[] as $g |
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .psd.seq_id,
-    "chromosome": .psd.chromosome,
-    "als": .psd.als,
-    "g": {
-      "id": $g.id,
-      "o": $g.orientation,
-      "r": $g.rnas[]
-    }
-  }
-}
-'
-
-# for this pattern, use FORMATTER_03
-#   {
-#    "keys": [
-#      "codon_aligned_transcript_change",
-#      "hgvs",
-#      "id",
-#      "product_id",
-#      "protein",
-#      "sequence_ontology"
-#    ]
-#  }
-
-FORMATTER_03='. |
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .psd.seq_id,
-    "chromosome": .psd.chromosome,
-    "als": .psd.als, 
-    "g": {
-      "id": .psd.g.id,
-      "o": .psd.g.o,
-      "r": {
-        "id": .psd.g.r.id,
-        "catc": {
-          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
-          "pos": .psd.g.r.codon_aligned_transcript_change.position,
-          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
-          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
-          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
-            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
-        },
-        "so": {
-          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
-        },
-        "product_id": .psd.g.r.product_id,
-        "p": {
-          "v": {
-            "spdi": {
-              "seq_id": .psd.g.r.protein.variant.spdi.seq_id,
-              "pos": .psd.g.r.protein.variant.spdi.position,
-              "del": .psd.g.r.protein.variant.spdi.deleted_sequence,
-              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence,
-              "d_i": (.psd.g.r.protein.variant.spdi.deleted_sequence + " -> "
-                + .psd.g.r.protein.variant.spdi.inserted_sequence)
-            }
-          }
-        },
-        "hgvs": .psd.g.r.hgvs
-      }
-    }
-  }
-}
-'
-
-# for this pattern, use FORMATTER_04
-#   {
-#    "keys": [
-#      "codon_aligned_transcript_change",
-#      "hgvs",
-#      "id",
-#      "sequence_ontology"
-#    ]
-#  }
-
-FORMATTER_04='. |
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .psd.seq_id,
-    "chromosome": .psd.chromosome,
-    "als": .psd.als,
-    "g": {
-      "id": .psd.g.id,
-      "o": .psd.g.o,
-      "r": {
-        "id": .psd.g.r.id,
-        "catc": {
-          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
-          "pos": .psd.g.r.codon_aligned_transcript_change.position,
-          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
-          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
-          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
-            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
-        },
-        "so": {
-          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
-        },
-        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
-        "p": {
-          "v": {
-            "spdi": {
-              "seq_id": 0,
-              "pos": 0,
-              "del": "-",
-              "ins": "-",
-              "d_i": ""
-            }
-          }
-        },
-
-        "hgvs": .psd.g.r.hgvs
-      }
-    }
-  }
-}
-'
-
-# for this pattern, use FORMATTER_05
-#  {
-#    "keys": [
-#      "hgvs",
-#      "id",
-#      "product_id",
-#      "sequence_ontology"
-#    ]
-#  },
-#  {
-#    "keys": [
-#      "id",
-#      "product_id",
-#      "sequence_ontology"
-#    ]
-#  },
-#  {
-#    "keys": [
-#      "id",
-#      "sequence_ontology"
-#    ]
-#  }
-
-FORMATTER_05='. |
-{
-  "refsnp_id": .refsnp_id,
-  "citations": .citations,
-  "psd":{
-    "seq_id": .psd.seq_id,
-    "chromosome": .psd.chromosome,
-    "als": .psd.als,
-    "g": {
-      "id": .psd.g.id,
-      "o": .psd.g.o,
-      "r": {
-        "id": .psd.g.r.id,
-        "catc": {
-          "seq_id": "---",
-          "pos": 0,
-          "del": "-",
-          "ins": "-",
-          "d_i": "---"
-        },
-        "so": {
-          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
-        },
-        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
-        "p": {
-          "v": {
-            "spdi": {
-              "seq_id": 0,
-              "pos": 0,
-              "del": "-",
-              "ins": "-",
-              "d_i": ""
-            }
-          }
-        },
-
-        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
-      }
-    }
-  }
-}
-'
-
-
 SECONDS=0
 
 # Input file.
@@ -307,17 +63,17 @@ fi
 
 # Format temp_temp_go.json to simpler json
 
-cat ${TEMP_FILE_G1M_P_1} | jq -c "${FORMATTER_02}" > ${TEMP_FILE_G1M_P_2}
+cat ${TEMP_FILE_G1M_P_1} | format_02 > ${TEMP_FILE_G1M_P_2}
 
 # Divide temp_go.json into json which does not contain protein info and json which contains protein info.
 
 cat ${TEMP_FILE_G1M_P_2} | jq -c 'select((.psd.g.r.codon_aligned_transcript_change | length) > 0)' > ${TEMP_FILE_G1M1P_}
-cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | jq -c "${FORMATTER_05}" > ${TEMP_FILE_G1M0P0}
+cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change | length) == 0)' | format_05 > ${TEMP_FILE_G1M0P0}
 
 # Format temp_temp_gomop_.json to simpler json
 
-cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | jq -c "${FORMATTER_03}" > ${TEMP_FILE_G1M1P1}
-cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | jq -c "${FORMATTER_04}" > ${TEMP_FILE_G1M1P0}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | format_03 > ${TEMP_FILE_G1M1P1}
+cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | format_04 > ${TEMP_FILE_G1M1P0}
 
 sleep 3
 
@@ -375,6 +131,7 @@ echo ${log_2} >> LOG/${LOGFILE}
 
 SECONDS=0
 
+rm -rf ${OUTPUT_TABLE2}
 sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_TABLE2} 
 sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_TABLE2}
 sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_TABLE2}
@@ -391,13 +148,11 @@ echo ${log_3} >> LOG/${LOGFILE}
 SECONDS=0
 
 cat ${TEMP_FILE_G1M_P_1} | jq '. |
-select((.psd.gs | length) > 0) |
-.psd.gs[] as $g |
 {
   "snp_id": .refsnp_id,
-  "gene_id": $g.id,
+  "gene_id": .psd.g.id,
   "so": {
-    "accession": ([$g.sequence_ontology[].accession] | join(";"))
+    "accession": ([.psd.g.sequence_ontology[].accession] | join(";"))
   },
 }' | jq --slurp -r 'unique | .[] |
 [

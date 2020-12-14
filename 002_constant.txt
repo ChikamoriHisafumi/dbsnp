@@ -1,0 +1,275 @@
+FORMATTER_01='. |
+.primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .primary_snapshot_data.placements_with_allele[0].seq_id,
+    "chromosome":
+      (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
+      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
+      else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
+    "als": {
+      "al": {
+        "spdi": {
+          "seq_id": $allele.allele.spdi.seq_id,
+          "pos": $allele.allele.spdi.position,
+          "del": $allele.allele.spdi.deleted_sequence,
+          "ins": $allele.allele.spdi.inserted_sequence
+        },
+        "hgvs": $allele.hgvs
+      }
+    },
+    "gs": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
+  }
+} |
+select( .psd.als.al.hgvs| contains(">")) |
+select((.psd.gs | length) > 0) |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": .psd.gs[] 
+  }
+} 
+'
+
+FORMATTER_02='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.orientation,
+      "r": .psd.g.rnas[]
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_03
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "protein",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_03='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als, 
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": .psd.g.r.product_id,
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": .psd.g.r.protein.variant.spdi.seq_id,
+              "pos": .psd.g.r.protein.variant.spdi.position,
+              "del": .psd.g.r.protein.variant.spdi.deleted_sequence,
+              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence,
+              "d_i": (.psd.g.r.protein.variant.spdi.deleted_sequence + " -> "
+                + .psd.g.r.protein.variant.spdi.inserted_sequence)
+            }
+          }
+        },
+        "hgvs": .psd.g.r.hgvs
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_04
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_04='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+        "hgvs": .psd.g.r.hgvs
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_05
+#  {
+#    "keys": [
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_05='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": "---",
+          "pos": 0,
+          "del": "-",
+          "ins": "-",
+          "d_i": "---"
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
+format_01(){
+
+  jq -c "${FORMATTER_01}"
+
+}
+
+format_02(){
+
+  jq -c "${FORMATTER_02}"
+
+}
+format_03(){
+
+  jq -c "${FORMATTER_03}"
+
+}
+
+format_04(){
+
+  jq -c "${FORMATTER_04}"
+
+}
+
+format_05(){
+
+  jq -c "${FORMATTER_05}"
+
+}
+
+test(){
+
+  echo 'sasa'
+
+}
+
+getFileSize(){
+
+  FILESIZE=`wc -c $1 | cut -d' ' -f1`
+  STR_FILESIZE=`numfmt --format="%'f" ${FILESIZE}`' bytes'
+  echo ${STR_FILESIZE}
+
+}
+
+
+
