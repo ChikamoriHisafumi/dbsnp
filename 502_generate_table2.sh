@@ -2,8 +2,35 @@
 # $2 is destination of output.
 
 . ./settings.txt
+. ./002_constant.txt
 
 PATH=${ADDITIONAL_PATH}:$PATH
+
+FILE_SIZE=`getFileSize_int $1`
+LIMIT=10000000000
+
+echo ${FILE_SIZE}
+
+if [ ${FILE_SIZE} -gt ${LIMIT} ]; then
+
+  echo 'Too big file. File will be split into small files.'
+
+  splitFile $1 10000000
+
+  files=DIR_$1/*
+
+  for filepath in $files; do
+
+    echo $filepath' was generated as temporal file. File name is '`basename $filepath`'.'
+
+    productpath='DIR_'$1'/table2_'`basename $filepath`
+    sh 502_generate_table2.sh $filepath $productpath
+
+    cat $productpath >> $2
+
+  done
+ 
+else
 
 cat $1 | jq -r '. |
 
@@ -35,3 +62,4 @@ cat $1 | jq -r '. |
 ] | @tsv
 ' >> $2
 
+fi
