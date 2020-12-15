@@ -15,15 +15,17 @@ if [ ${FILE_SIZE} -gt ${LIMIT} ]; then
 
   echo 'Too big file. File will be split into small files.'
 
-  splitFile $1 10000000
+  DATESTR=`date +%Y%m%d-%H%M%S`
 
-  files=DIR_$1/*
+  splitFile $1 10000000 ${DATESTR}
+
+  files=DIR_${DATESTR}/*
 
   for filepath in $files; do
 
     echo $filepath' was generated as temporal file. File name is '`basename $filepath`'.'
 
-    productpath='DIR_'$1'/table2_'`basename $filepath`
+    productpath='DIR_'${DATESTR}'/table2_'`basename $filepath`
     sh 502_generate_table2.sh $filepath $productpath
 
     cat $productpath >> $2

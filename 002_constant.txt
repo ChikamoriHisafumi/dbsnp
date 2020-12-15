@@ -285,7 +285,9 @@ splitFile(){
 
   FILE=$1
   ROW=$2
-  DIR=DIR_${FILE}
+  DIR=DIR_$3
+
+  BASENAME=`basename ${FILE}`
 
   TOTAL_ROW=`cat ${FILE} | wc -l`
 
@@ -314,12 +316,12 @@ splitFile(){
 
     if [[ $i -lt $max ]] ; then
 
-      NEW_FILE_NAME=${FILE}'_'${INIT}'-'${TERM}
+      NEW_FILE_NAME=${BASENAME}'_'${INIT}'-'${TERM}
       cat ${FILE} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
 
     else
 
-      NEW_FILE_NAME=${FILE}'_'${INIT}'-'${TOTAL_ROW}
+      NEW_FILE_NAME=${BASENAME}'_'${INIT}'-'${TOTAL_ROW}
       cat ${FILE} | head -n ${TERM} | tail -n $((${TOTAL_ROW}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
 
     fi

@@ -165,7 +165,7 @@ cat ${TEMP_FILE_G1M_P_1} | jq '. |
 sleep 3
 
 time_4=$SECONDS
-log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}': '`getFileSize ${OUTPUT_TABLE3}`' bytes).'
+log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}': '`getFileSize ${OUTPUT_TABLE3}`').'
 
 echo ${log_4}
 echo ${log_4} >> LOG/${LOGFILE}
