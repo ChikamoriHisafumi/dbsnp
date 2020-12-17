@@ -233,7 +233,7 @@ FORMATTER_05='. |
 
 format_01(){
 
-  jq -c "${FORMATTER_01}"
+  jq -r -c "${FORMATTER_01}"
 
 }
 

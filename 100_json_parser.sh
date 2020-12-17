@@ -44,11 +44,11 @@ FILE_TYPE=`file ${INPUT_PATH}`
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT_PATH} | jq -r -c "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  cat ${INPUT_PATH} | format_01 > ${TEMP_FILE_G1M_P_1}
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT_PATH} | jq -r -c "${FORMATTER_01}" > ${TEMP_FILE_G1M_P_1}
+  bzcat ${INPUT_PATH} | format_01 > ${TEMP_FILE_G1M_P_1}
 
 fi
 
