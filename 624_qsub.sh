@@ -7,7 +7,8 @@
 #############################
 
 cd /home/nibiohnproj9/chikamori/dbsnp/
-sh 100_json_parser.sh /home/nibiohnproj9/chikamori/dbsnp/BZ2/refsnp-chrY.json.bz2
+# sh 100_json_parser.sh /home/nibiohnproj9/chikamori/dbsnp/BZ2/refsnp-chrY.json.bz2
+sh 101_modified_ver.sh /home/nibiohnproj9/chikamori/dbsnp/BZ2/refsnp-chrY.json.bz2 600000
 
 #############################
 

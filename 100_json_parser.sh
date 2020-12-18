@@ -42,6 +42,8 @@ SECONDS=0
 
 FILE_TYPE=`file ${INPUT_PATH}`
 
+echo 'input path is = '${INPUT_PATH}
+
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
   cat ${INPUT_PATH} | format_01 > ${TEMP_FILE_G1M_P_1}
