@@ -51,8 +51,8 @@ for ((i=0; i <= $max; i++)); do
   else
 
     NEW_FILE_NAME=${FILE}'_'${INIT}'-'${TOTAL_ROW}
-    ${CMD_CAT} ${FILE_PATH} | head -n ${TERM} | tail -n $((${TOTAL_ROW}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
-    echo ${CMD_CAT}' '${FILE_PATH}' | head -n '${TERM}' | tail -n '$((${TOTAL_ROW}-${INT_INIT}+1))' > '${DIR}/${NEW_FILE_NAME}
+    ${CMD_CAT} ${FILE_PATH} | tail -n $((${TOTAL_ROW}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
+    echo ${CMD_CAT}' '${FILE_PATH}' | tail -n '$((${TOTAL_ROW}-${INT_INIT}+1))' > '${DIR}/${NEW_FILE_NAME}
   fi
 
 #  cat ${FILE} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${NEW_FILE_NAME}
