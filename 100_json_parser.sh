@@ -47,11 +47,11 @@ echo 'input path is = '${INPUT_PATH}
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
   cat ${INPUT_PATH} | format_01 > ${TEMP_FILE_G1M_P_1}
-
+  echo 'cat '${INPUT_PATH}' | format_01 > '${TEMP_FILE_G1M_P_1}
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
   bzcat ${INPUT_PATH} | format_01 > ${TEMP_FILE_G1M_P_1}
-
+  echo 'bzcat '${INPUT_PATH}' | format_01 > '${TEMP_FILE_G1M_P_1}
 fi
 
 # Input file.
@@ -77,6 +77,8 @@ cat ${TEMP_FILE_G1M_P_2} | jq 'select((.psd.g.r.codon_aligned_transcript_change 
 cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) > 0)' | format_03 > ${TEMP_FILE_G1M1P1}
 cat ${TEMP_FILE_G1M1P_} | jq 'select((.psd.g.r.protein | length) == 0)' | format_04 > ${TEMP_FILE_G1M1P0}
 
+if [ ${DEBUG_MODE_01} = 'yes' ]; then
+
 sleep 3
 
 time_1=$SECONDS
@@ -87,6 +89,7 @@ echo '[from file:'${INPUT_PATH}']' >> LOG/${LOGFILE}
 echo ${log_1}
 echo ${log_1} >> LOG/${LOGFILE}
 
+fi
 
 SECONDS=0
 
@@ -122,6 +125,8 @@ group_by(.refsnp_id) | .[] |
 ] | @tsv
 ' > ${OUTPUT_TABLE1}
 
+if [ ${DEBUG_MODE_01} = 'yes' ]; then
+
 sleep 3
 
 time_2=$SECONDS
@@ -130,6 +135,7 @@ log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_TABLE1}': 
 echo ${log_2}
 echo ${log_2} >> LOG/${LOGFILE}
 
+fi
 
 SECONDS=0
 
@@ -137,6 +143,8 @@ rm -rf ${OUTPUT_TABLE2}
 sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_TABLE2} 
 sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_TABLE2}
 sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_TABLE2}
+
+if [ ${DEBUG_MODE_01} = 'yes' ]; then
 
 sleep 3
 
@@ -146,6 +154,7 @@ log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_TABLE2}': 
 echo ${log_3}
 echo ${log_3} >> LOG/${LOGFILE}
 
+fi
 
 SECONDS=0
 
@@ -164,6 +173,8 @@ cat ${TEMP_FILE_G1M_P_1} | jq '. |
 ] | @tsv
 ' > ${OUTPUT_TABLE3}
 
+if [ ${DEBUG_MODE_01} = 'yes' ]; then
+
 sleep 3
 
 time_4=$SECONDS
@@ -180,4 +191,4 @@ echo ${log_all}
 echo ${log_all} >> LOG/${LOGFILE}
 echo ''  >> LOG/${LOGFILE}
 
-
+fi

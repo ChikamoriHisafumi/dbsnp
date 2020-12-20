@@ -296,14 +296,15 @@ splitFile(){
   DIGIT=${#TOTAL_ROW}
   ZERO_PADDING=`echo ${TOTAL_ROW} | sed s/[0-9]/0/g`
 
-  max=${TOTAL_ROW}/${ROW}
-  max=${max%.*}
+  max=$(((${TOTAL_ROW}+(${ROW}-1))/${ROW}))
+#  max=${max%.*}
+  
 
   if [ ! -d ./${DIR} ]; then
     mkdir ${DIR} 
   fi
 
-  for ((i=0; i <= $max; i++)); do
+  for ((i=0; i < $max; i++)); do
     
     INT_INIT=$((1+(i*${ROW})))
     INIT=${ZERO_PADDING}${INT_INIT}
@@ -314,7 +315,7 @@ splitFile(){
     TERM=${TERM:$((-1*${DIGIT}))}
 
 
-    if [[ $i -lt $max ]] ; then
+    if [[ $i -lt $max-1 ]] ; then
 
       NEW_FILE_NAME=${BASENAME}'_'${INIT}'-'${TERM}
       cat ${FILE} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}

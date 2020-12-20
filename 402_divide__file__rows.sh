@@ -25,14 +25,14 @@ echo 'Total row is '${TOTAL_ROW}'.'
 DIGIT=${#TOTAL_ROW}
 ZERO_PADDING=`echo ${TOTAL_ROW} | sed s/[0-9]/0/g`
 
-max=${TOTAL_ROW}/${ROW}
-max=${max%.*}
+max=$(((${TOTAL_ROW}+(${ROW}-1))/${ROW}))
+#  max=${max%.*}
 
 mkdir ${DIR}
 
 echo 'New directory "'${DIR}'" was generated.'
 
-for ((i=0; i <= $max; i++)); do
+for ((i=0; i < $max; i++)); do
     
   INT_INIT=$((1+(i*${ROW})))
   INIT=${ZERO_PADDING}${INT_INIT}
@@ -42,8 +42,7 @@ for ((i=0; i <= $max; i++)); do
   TERM=${ZERO_PADDING}${INT_TERM}
   TERM=${TERM:$((-1*${DIGIT}))}
 
-
-  if [[ $i -lt $max ]] ; then
+  if [[ $i -lt $max-1 ]] ; then
 
     NEW_FILE_NAME=${FILE}'_'${INIT}'-'${TERM}
     ${CMD_CAT} ${FILE_PATH} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
