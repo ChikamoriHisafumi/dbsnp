@@ -106,7 +106,7 @@ FORMATTER_03='. |
             }
           }
         },
-        "hgvs": .psd.g.r.hgvs
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
       }
     }
   }
@@ -159,7 +159,7 @@ FORMATTER_04='. |
             }
           }
         },
-        "hgvs": .psd.g.r.hgvs
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
       }
     }
   }
