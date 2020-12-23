@@ -1,7 +1,7 @@
 
 FTP_URL=https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/
 
-ARR_CHR_BZ2=(\
+ARR_CHR_BZ2_1=(\
 refsnp-chrY.json.bz2 \
 refsnp-chrX.json.bz2 \
 refsnp-chrMT.json.bz2 \
@@ -17,6 +17,9 @@ refsnp-chr9.json.bz2 \
 refsnp-chr10.json.bz2 \
 refsnp-chr11.json.bz2 \
 refsnp-chr12.json.bz2 \
+)
+
+ARR_CHR_BZ2_2=(\
 refsnp-chr13.json.bz2 \
 refsnp-chr14.json.bz2 \
 refsnp-chr15.json.bz2 \
@@ -29,7 +32,52 @@ refsnp-chr21.json.bz2 \
 refsnp-chr22.json.bz2 \
 )
 
-#for i in "${ARR_CHR_BZ2[@]}"
-#do
-#echo ${FTP_URL}$i
-#done
+ARR_CHR_BZ2_3=(\
+refsnp-chrMT.json.bz2 \
+refsnp-chrX.json.bz2 \
+refsnp-chrY.json.bz2 \
+# refsnp-merged.json.bz2 \
+# refsnp-nosnppos.json.bz2 \
+refsnp-other.json.bz2 \
+refsnp-sample.json.bz2 \
+# refsnp-unsupported.json.bz2 \
+# refsnp-withdrawn.json.bz2 \
+)
+
+# for i in "${ARR_CHR_BZ2_1[@]}"
+# do
+# echo ${FTP_URL}$i
+# done
+
+
+# refsnp-chr1.json.bz2            2020-05-13 16:20   20G  
+# refsnp-chr2.json.bz2            2020-05-13 16:24   21G  
+# refsnp-chr3.json.bz2            2020-05-13 16:27   18G  
+# refsnp-chr4.json.bz2            2020-05-13 16:30   15G  
+# refsnp-chr5.json.bz2            2020-05-13 16:32   14G  
+# refsnp-chr6.json.bz2            2020-05-13 16:34   15G  
+# refsnp-chr7.json.bz2            2020-05-13 16:36   14G  
+# refsnp-chr8.json.bz2            2020-05-13 16:38   13G  
+# refsnp-chr9.json.bz2            2020-05-13 16:40   11G  
+# refsnp-chr10.json.bz2           2020-05-13 16:05   12G  
+# refsnp-chr11.json.bz2           2020-05-13 16:06   12G  
+# refsnp-chr12.json.bz2           2020-05-13 16:08   12G  
+# refsnp-chr13.json.bz2           2020-05-13 16:10  7.3G  
+# refsnp-chr14.json.bz2           2020-05-13 16:11  7.8G  
+# refsnp-chr15.json.bz2           2020-05-13 16:12  7.6G  
+# refsnp-chr16.json.bz2           2020-05-13 16:13  8.3G  
+# refsnp-chr17.json.bz2           2020-05-13 16:14  7.8G  
+# refsnp-chr18.json.bz2           2020-05-13 16:15  6.2G  
+# refsnp-chr19.json.bz2           2020-05-13 16:16  6.1G  
+# refsnp-chr20.json.bz2           2020-05-13 16:20  5.0G  
+# refsnp-chr21.json.bz2           2020-05-13 16:21  2.9G  
+# refsnp-chr22.json.bz2           2020-05-13 16:21  3.5G  
+# refsnp-chrMT.json.bz2           2020-05-01 15:35  1.4M  
+# refsnp-chrX.json.bz2            2020-05-13 16:41  8.0G  
+# refsnp-chrY.json.bz2            2020-05-13 16:41  432M  
+# refsnp-merged.json.bz2          2020-05-13 16:41  747M  
+# refsnp-nosnppos.json.bz2        2020-05-13 16:41   12K  
+# refsnp-other.json.bz2           2020-05-13 16:41   14M  
+# refsnp-sample.json.bz2          2020-05-13 16:41  5.5K  
+# refsnp-unsupported.json.bz2     2020-05-13 16:41   19M  
+# refsnp-withdrawn.json.bz2       2020-05-13 16:41   70M  

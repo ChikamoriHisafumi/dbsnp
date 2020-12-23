@@ -1,0 +1,336 @@
+. ./settings.txt
+PATH=${ADDITIONAL_PATH}:$PATH
+
+FORMATTER_01='. |
+.primary_snapshot_data.placements_with_allele[0].alleles[] as $allele |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .primary_snapshot_data.placements_with_allele[0].seq_id,
+    "chromosome":
+      (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
+      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
+      else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
+    "als": {
+      "al": {
+        "spdi": {
+          "seq_id": $allele.allele.spdi.seq_id,
+          "pos": $allele.allele.spdi.position,
+          "del": $allele.allele.spdi.deleted_sequence,
+          "ins": $allele.allele.spdi.inserted_sequence
+        },
+        "hgvs": $allele.hgvs
+      }
+    },
+    "gs": .primary_snapshot_data.allele_annotations[].assembly_annotation[].genes
+  }
+} |
+select( .psd.als.al.hgvs| contains(">")) |
+select((.psd.gs | length) > 0) |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": .psd.gs[] 
+  }
+} 
+'
+
+FORMATTER_02='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.orientation,
+      "r": .psd.g.rnas[]
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_03
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "protein",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_03='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als, 
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": .psd.g.r.product_id,
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": .psd.g.r.protein.variant.spdi.seq_id,
+              "pos": .psd.g.r.protein.variant.spdi.position,
+              "del": .psd.g.r.protein.variant.spdi.deleted_sequence,
+              "ins": .psd.g.r.protein.variant.spdi.inserted_sequence,
+              "d_i": (.psd.g.r.protein.variant.spdi.deleted_sequence + " -> "
+                + .psd.g.r.protein.variant.spdi.inserted_sequence)
+            }
+          }
+        },
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_04
+#   {
+#    "keys": [
+#      "codon_aligned_transcript_change",
+#      "hgvs",
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_04='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": .psd.g.r.codon_aligned_transcript_change.seq_id,
+          "pos": .psd.g.r.codon_aligned_transcript_change.position,
+          "del": .psd.g.r.codon_aligned_transcript_change.deleted_sequence,
+          "ins": .psd.g.r.codon_aligned_transcript_change.inserted_sequence,
+          "d_i": (.psd.g.r.codon_aligned_transcript_change.deleted_sequence + " -> "
+            + .psd.g.r.codon_aligned_transcript_change.inserted_sequence)
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
+# for this pattern, use FORMATTER_05
+#  {
+#    "keys": [
+#      "hgvs",
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "product_id",
+#      "sequence_ontology"
+#    ]
+#  },
+#  {
+#    "keys": [
+#      "id",
+#      "sequence_ontology"
+#    ]
+#  }
+
+FORMATTER_05='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "seq_id": .psd.seq_id,
+    "chromosome": .psd.chromosome,
+    "als": .psd.als,
+    "g": {
+      "id": .psd.g.id,
+      "o": .psd.g.o,
+      "r": {
+        "id": .psd.g.r.id,
+        "catc": {
+          "seq_id": "---",
+          "pos": 0,
+          "del": "-",
+          "ins": "-",
+          "d_i": "---"
+        },
+        "so": {
+          "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
+        },
+        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "p": {
+          "v": {
+            "spdi": {
+              "seq_id": 0,
+              "pos": 0,
+              "del": "-",
+              "ins": "-",
+              "d_i": ""
+            }
+          }
+        },
+        "hgvs": (if .psd.g.r.hgvs == null then "---" else .psd.g.r.hgvs end)
+      }
+    }
+  }
+}
+'
+
+format_01(){
+
+  jq -r -c "${FORMATTER_01}"
+
+}
+
+format_02(){
+
+  jq -c "${FORMATTER_02}"
+
+}
+format_03(){
+
+  jq -c "${FORMATTER_03}"
+
+}
+
+format_04(){
+
+  jq -c "${FORMATTER_04}"
+
+}
+
+format_05(){
+
+  jq -c "${FORMATTER_05}"
+
+}
+
+test(){
+
+  echo 'sasa'
+
+}
+
+getFileSize(){
+
+  FILESIZE=`wc -c $1 | cut -d' ' -f1`
+  STR_FILESIZE=`numfmt --format="%'f" ${FILESIZE}`' bytes'
+  echo ${STR_FILESIZE}
+
+}
+
+getFileSize_int(){
+
+  FILESIZE=`wc -c $1 | cut -d' ' -f1`
+  echo ${FILESIZE}
+
+}
+
+splitFile(){
+
+  FILE=$1
+  ROW=$2
+  DIR=DIR_$3
+
+  BASENAME=`basename ${FILE}`
+
+  TOTAL_ROW=`cat ${FILE} | wc -l`
+
+  echo ${TOTAL_ROW}
+
+  DIGIT=${#TOTAL_ROW}
+  ZERO_PADDING=`echo ${TOTAL_ROW} | sed s/[0-9]/0/g`
+
+  max=$(((${TOTAL_ROW}+(${ROW}-1))/${ROW}))
+#  max=${max%.*}
+  
+
+  if [ ! -d ./${DIR} ]; then
+    mkdir ${DIR} 
+  fi
+
+  for ((i=0; i < $max; i++)); do
+    
+    INT_INIT=$((1+(i*${ROW})))
+    INIT=${ZERO_PADDING}${INT_INIT}
+    INIT=${INIT:$((-1*${DIGIT}))}
+
+    INT_TERM=$(((i+1)*${ROW}))
+    TERM=${ZERO_PADDING}${INT_TERM}
+    TERM=${TERM:$((-1*${DIGIT}))}
+
+
+    if [[ $i -lt $max-1 ]] ; then
+
+      NEW_FILE_NAME=${BASENAME}'_'${INIT}'-'${TERM}
+      cat ${FILE} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
+      echo 'cat '${FILE}' | head -n '${TERM}' | tail -n '$((${INT_TERM}-${INT_INIT}+1))' > '${DIR}/${NEW_FILE_NAME}
+
+    else
+
+      NEW_FILE_NAME=${BASENAME}'_'${INIT}'-'${TOTAL_ROW}
+      cat ${FILE} | tail -n $((${TOTAL_ROW}-${INT_INIT}+1)) > ${DIR}/${NEW_FILE_NAME}
+      echo 'cat '${FILE}' | tail -n '$((${TOTAL_ROW}-${INT_INIT}+1))' > '${DIR}/${NEW_FILE_NAME}
+
+    fi
+
+  #  cat ${FILE} | head -n ${TERM} | tail -n $((${INT_TERM}-${INT_INIT}+1)) > ${NEW_FILE_NAME}
+
+  done
+
+}

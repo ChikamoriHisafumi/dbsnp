@@ -1,0 +1,30 @@
+jq -cを入れると、ファイルのサイズが劇的に圧縮される。
+
+jq -cなし。
+
+[tiqua@mydesk dbsnp]$ ll temp/temp_file_g1m*1000.json
+-rw-rw-r-- 1 tiqua tiqua 5432300 Dec 14 07:32 temp/temp_file_g1m0p0_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua   64366 Dec 14 07:32 temp/temp_file_g1m1p0_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua  147696 Dec 14 07:32 temp/temp_file_g1m1p1_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua  238684 Dec 14 07:32 temp/temp_file_g1m1p__refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua 3177078 Dec 14 07:32 temp/temp_file_g1m_p_1_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua 4007564 Dec 14 07:32 temp/temp_file_g1m_p_2_refsnp-chrY.json-1000.json
+
+[tiqua@mydesk dbsnp]$ sh 100_json_parser.sh refsnp-chrY.json-1000
+[from file:refsnp-chrY.json-1000]
+It took 4 seconds to generate temporary formatted files.
+It took 3 seconds to generate table1 file (TABLE/table1_refsnp-chrY.json-1000.tsv: 48,339 bytes).
+It took 3 seconds to generate table2 file (TABLE/table2_refsnp-chrY.json-1000.tsv: 1,644,464 bytes).
+It took 4 seconds to generate table3 file (TABLE/table3_refsnp-chrY.json-1000.tsv: 5,827 bytes bytes).
+Totally it took 14 seconds to generate all table file.
+
+jq -cあり。
+
+[tiqua@mydesk dbsnp]$ ll temp/temp_file_g1m*1000.json
+-rw-rw-r-- 1 tiqua tiqua 2773606 Dec 14 07:35 temp/temp_file_g1m0p0_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua   32950 Dec 14 07:35 temp/temp_file_g1m1p0_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua   78914 Dec 14 07:35 temp/temp_file_g1m1p1_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua  138340 Dec 14 07:35 temp/temp_file_g1m1p__refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua 1718144 Dec 14 07:35 temp/temp_file_g1m_p_1_refsnp-chrY.json-1000.json
+-rw-rw-r-- 1 tiqua tiqua 2364864 Dec 14 07:35 temp/temp_file_g1m_p_2_refsnp-chrY.json-1000.json
+
