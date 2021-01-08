@@ -1,18 +1,17 @@
 #!/bin/bash
-#PBS -q SMALL
-#PBS -l ncpus=2
-#PBS -N dbsnp_chr22 
 
-#cd {DIRECTORY}
-#############################
+##PBS -q SMALL
+##PBS -l ncpus=2
 
-JOB_NAME=dbsnp_chr22
-DATESTR=`date +%Y%m%d-%H%M%S`
-logfile=log_${DATESTR}_qsub_${JOB_NAME}.log
-CUR_DIR=/home/nibiohnproj9/chikamori/dbsnp
+#PBS -q LONG
+#PBS -l select=1:ncpus=10:mem=128gb
+#PBS -j oe
 
-cd ${CUR_DIR}/
-sh 101_modified_ver.sh ${CUR_DIR}/BZ2/refsnp-chr22.json.bz2 10000000 &> ${CUR_DIR}/LOG/${logfile}
+#PBS -N dbsnp_chr22
+
+############################
+
+sh /home/nibiohnproj9/chikamori/dbsnp/600_qsub.sh 22
 
 #############################
 

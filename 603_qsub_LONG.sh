@@ -1,13 +1,13 @@
 #!/bin/bash
 #PBS -q LONG
 #PBS -l select=1:ncpus=10:mem=128gb
-#PBS -N dbsnp_chr8 
 #PBS -j oe
+#PBS -N dbsnp_chr3
 
 #cd {DIRECTORY}
 #############################
 
-sh /home/nibiohnproj9/chikamori/dbsnp/600_qsub.sh 8
+sh /home/nibiohnproj9/chikamori/dbsnp/600_qsub.sh 3
 
 #############################
 
