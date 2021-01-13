@@ -2,12 +2,12 @@
 #!/bin/bash
 #PBS -q SMALL
 #PBS -l ncpus=40
-#PBS -N dbsnp_chr11
+#PBS -N dbsnp_chr21
 
 #############################
 
 # Please input the number of chromosome (1-22, X, Y or MT)
-chromosome=11
+chromosome=21
 
 # If you want to run with parallel (multi thread), set mode=2, or set mode=1.
 mode=2
