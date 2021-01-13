@@ -26,3 +26,5 @@ DEBUG_MODE_02=yes
 DEBUG_MODE_03=yes
 
 EOH
+
+mkdir BZ2
