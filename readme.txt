@@ -9,14 +9,19 @@ wget https://ftp.gnu.org/gnu/parallel/
 
 sh 000_first.sh
 
+vim settings.txt
+# -> please fill ADDITIONAL_PATH and DBSNP_PATH
+
 # enter into BZ2 directory, and get json file of chromosome Y
 
 cd BZ2/
 wget https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/refsnp-chrY.json.bz2
 
-# go back to top of repository, and run sh in 602_SMALL directory by qsub
+# go back to top of repository, and generate shell files in 602_SMALL directory
+# and run sh in 602_SMALL directory by qsub
 
 cd ..
+sh 710_generate_qsub_shs.sh
 qsub 602_SMALL/24_qsub_SMALL.sh
 
 # about 5 minitues passed, please confirm product in TABLE directory
