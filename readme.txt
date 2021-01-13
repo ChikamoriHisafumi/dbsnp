@@ -1,7 +1,8 @@
 # please download binary files (jq and parallel)
+# in case of parallel, please select version to download
 
-wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-wget https://ftp.gnu.org/gnu/parallel/
+https://stedolan.github.io/jq/
+https://ftp.gnu.org/gnu/parallel/
 
 # run this sh file to generate settings.txt and BZ2 directory
 # (why is settings.txt absent? -> because settings vary on every user's environment)
