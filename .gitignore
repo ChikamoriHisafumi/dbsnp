@@ -1,4 +1,5 @@
 [a-zA-Z]*
+60*
+61*
 !readme.txt
-!BZ2
 

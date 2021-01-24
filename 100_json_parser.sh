@@ -95,12 +95,10 @@ SECONDS=0
 
 cat ${TEMP_FILE_G1M_P_1} | jq -r '. |
 {
-  "refsnp_id": ("rs" + .refsnp_id),
+  "refsnp_id": .refsnp_id,
   "variation": (.psd.als.al.spdi.del + ">" + .psd.als.al.spdi.ins),
   "chromosome": .psd.chromosome,
-  "orientation": (if .psd.g.orientation == "plus" then "Fwd" elif .psd.g.orientation == "minus" then "Rev" else "---" end),
   "position_chr": (.psd.chromosome + ":" + ((.psd.als.al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
-  "sequencing": "Primary_Assembly",
   "citations": (.citations | join(";")) 
 }' | jq -s -r '. | 
 group_by(.refsnp_id) | .[] |
@@ -108,9 +106,7 @@ group_by(.refsnp_id) | .[] |
   "refsnp_id": ([.[].refsnp_id] | unique)[],
   "variation": ([.[].variation] | unique | join(" / ")),
   "chromosome": ([.[].chromosome] | unique)[],
-  "orientation": ([.[].orientation] | unique)[],
   "position_chr": ([.[].position_chr] | unique)[],
-  "sequencing": "Primary_Assembly",
   "citations": ([.[].citations] | unique)[]
 
 } |
@@ -118,9 +114,7 @@ group_by(.refsnp_id) | .[] |
   .refsnp_id,
   .variation,
   .chromosome,
-  .orientation,
   .position_chr,
-  .sequencing,
   .citations
 ] | @tsv
 ' > ${OUTPUT_TABLE1}

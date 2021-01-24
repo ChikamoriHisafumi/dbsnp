@@ -11,6 +11,7 @@ FORMATTER_01='. |
     "chromosome":
       (if .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "23" then "X" 
       elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] == "24" then "Y" 
+      elif .primary_snapshot_data.placements_with_allele[0].seq_id[7:8] == "0" then .primary_snapshot_data.placements_with_allele[0].seq_id[8:9] 
       else .primary_snapshot_data.placements_with_allele[0].seq_id[7:9] end),
     "als": {
       "al": {

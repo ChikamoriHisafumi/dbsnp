@@ -87,6 +87,14 @@ mv TABLE/table3_${FILE}_tsv TABLE/${PRODUCT_DIR}/table3_${FILE}.tsv
 rm -rf TEMP_${DATESTR}
 rm -rf temp_list
 
+sort -u TABLE/${PRODUCT_DIR}/table1_${FILE}.tsv > TABLE/${PRODUCT_DIR}/table1_${FILE}.tsv.sorted
+sort -u TABLE/${PRODUCT_DIR}/table2_${FILE}.tsv > TABLE/${PRODUCT_DIR}/table2_${FILE}.tsv.sorted
+sort -u TABLE/${PRODUCT_DIR}/table3_${FILE}.tsv > TABLE/${PRODUCT_DIR}/table3_${FILE}.tsv.sorted
+
+rm -rf TABLE/${PRODUCT_DIR}/table1_${FILE}.tsv
+rm -rf TABLE/${PRODUCT_DIR}/table2_${FILE}.tsv
+rm -rf TABLE/${PRODUCT_DIR}/table3_${FILE}.tsv
+
 sleep 3
 
 time_1=$SECONDS
