@@ -134,9 +134,9 @@ fi
 SECONDS=0
 
 rm -rf ${OUTPUT_TABLE2}
-sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_TABLE2} 
-sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_TABLE2}
-sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_TABLE2}
+sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_TABLE2} 1 
+sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_TABLE2} 1
+sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_TABLE2} 1
 
 if [ ${DEBUG_MODE_01} = 'yes' ]; then
 

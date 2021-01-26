@@ -34,6 +34,10 @@ if [ ${FILE_SIZE} -gt ${LIMIT} ]; then
  
 else
 
+  method=$3
+
+  if [ ${method} = 1 ]; then
+
 cat $1 | jq -r '. | 
 select(.psd.g.r.hgvs | contains("=") | not) |
 select(.psd.g.r.hgvs | contains("---") | not) |
@@ -65,5 +69,48 @@ select(.psd.g.r.hgvs | contains("---") | not) |
   .SO_id
 ] | @tsv
 ' >> $2
+
+  elif  [ ${method} = 2 ]; then
+
+  echo 'echo'
+
+cat $1 | jq -r '. |
+select(.psd.g.r.hgvs | contains("=") | not) |
+select(.psd.g.r.hgvs | contains("---") | not) |
+
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": (.psd.g.id|tostring),
+  "accession_no_r": .psd.g.r.id,
+  "position_r": (if .psd.g.r.catc.pos == 0 then "" else ((.psd.g.r.catc.pos + 1)|tostring) end),
+  "orientation": (if .psd.g.o == "plus" then "Fwd" elif .psd.g.o == "minus" then "Rev" else "---" end),
+  "base_substitution": (if .psd.g.r.hgvs | contains("=") then "---" else (.psd.g.r.hgvs[-3:] | gsub(">";" -> ")) end),
+  "codon_change": .psd.g.r.catc.d_i,
+  "accession_no_p": .psd.g.r.product_id,
+  "position_p": (if .psd.g.r.p.v.spdi.pos == 0 then "" else ((.psd.g.r.p.v.spdi.pos + 1)|tostring) end),
+  "aa_substitution": .psd.g.r.p.v.spdi.d_i,
+  "SO_id": .psd.g.r.so.accession
+} 
+
+' | jq -s '. | 
+map(
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": .gene_id,
+  "details": ([.accession_no_r, .position_r, .orientation, .base_substitution, .codon_change, .accession_no_p, .position_p, .aa_substitution, .SO_id] | join(","))
+}) | group_by(.refsnp_id + .gene_id) | 
+. as $ggp | 
+.[] as $gp | $gp | 
+reduce .[] as $rs (""; . + $rs.details + "|")  | 
+[{"refsnp_id": $gp[].refsnp_id , "gene_id": $gp[].gene_id , "details": .[:-1]} ] | unique | .[]
+' | jq -s -r ' .[] |
+[
+  .refsnp_id,
+  .gene_id,
+  .details
+] | @tsv
+' >> $2
+
+  fi
 
 fi
