@@ -148,7 +148,7 @@ FORMATTER_04='. |
         "so": {
           "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
         },
-        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "product_id": (if .psd.g.r.product_id == null then "" else .psd.g.r.product_id end),
         "p": {
           "v": {
             "spdi": {
@@ -213,7 +213,7 @@ FORMATTER_05='. |
         "so": {
           "accession": ([.psd.g.r.sequence_ontology[].accession] | join(";"))
         },
-        "product_id": (if .psd.g.r.product_id == null then "0" else .psd.g.r.product_id end),
+        "product_id": (if .psd.g.r.product_id == null then "" else .psd.g.r.product_id end),
         "p": {
           "v": {
             "spdi": {
