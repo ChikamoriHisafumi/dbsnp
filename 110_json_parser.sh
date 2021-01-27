@@ -1,3 +1,5 @@
+#!/bin/bash
+
 . ./settings.txt
 . ./002_constant.txt
 
@@ -6,6 +8,7 @@ INPUT_PATH=$1
 INPUT=`basename ${INPUT_PATH}`
 
 OUTPUT_TABLE=$2
+FLG_table2_type=$3
 
 if [ ! -d ./temp ]; then
   mkdir temp 
@@ -30,9 +33,9 @@ TEMP_FILE_G1M0P0=temp/temp_file_g1m0p0_${INPUT}.json
 TEMP_FILE_G1M1P0=temp/temp_file_g1m1p0_${INPUT}.json
 TEMP_FILE_G1M1P1=temp/temp_file_g1m1p1_${INPUT}.json
 
-OUTPUT_TABLE1=${OUTPUT_TABLE}/table1_${INPUT}.tsv
-OUTPUT_TABLE2=${OUTPUT_TABLE}/table2_${INPUT}.tsv
-OUTPUT_TABLE3=${OUTPUT_TABLE}/table3_${INPUT}.tsv
+OUTPUT_JSON1=${OUTPUT_TABLE}/table1_${INPUT}.json
+OUTPUT_JSON2=${OUTPUT_TABLE}/table2_${INPUT}.json
+OUTPUT_JSON3=${OUTPUT_TABLE}/table3_${INPUT}.json
 
 SECONDS=0
 
@@ -107,22 +110,14 @@ group_by(.refsnp_id) | .[] |
   "position_chr": ([.[].position_chr] | unique)[],
   "citations": ([.[].citations] | unique)[]
 
-} |
-[
-  .refsnp_id,
-  .variation,
-  .chromosome,
-  .position_chr,
-  .citations
-] | @tsv
-' > ${OUTPUT_TABLE1}
+}' > ${OUTPUT_JSON1}
 
 if [ ${DEBUG_MODE_01} = 'yes' ]; then
 
 sleep 3
 
 time_2=$SECONDS
-log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_TABLE1}': '`getFileSize ${OUTPUT_TABLE1}`').'
+log_2='It took '${time_2}' seconds to generate table1 file ('${OUTPUT_JSON1}': '`getFileSize ${OUTPUT_JSON1}`').'
 
 echo ${log_2}
 echo ${log_2} >> LOG/${LOGFILE}
@@ -131,17 +126,17 @@ fi
 
 SECONDS=0
 
-rm -rf ${OUTPUT_TABLE2}
-sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_TABLE2} 2 
-sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_TABLE2} 2
-sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_TABLE2} 2
+rm -rf ${OUTPUT_JSON2}
+sh 502_generate_table2.sh ${TEMP_FILE_G1M1P1} ${OUTPUT_JSON2} ${FLG_table2_type} 
+sh 502_generate_table2.sh ${TEMP_FILE_G1M1P0} ${OUTPUT_JSON2} ${FLG_table2_type}
+sh 502_generate_table2.sh ${TEMP_FILE_G1M0P0} ${OUTPUT_JSON2} ${FLG_table2_type}
 
 if [ ${DEBUG_MODE_01} = 'yes' ]; then
 
 sleep 3
 
 time_3=$SECONDS
-log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_TABLE2}': '`getFileSize ${OUTPUT_TABLE2}`').'
+log_3='It took '${time_3}' seconds to generate table2 file ('${OUTPUT_JSON2}': '`getFileSize ${OUTPUT_JSON2}`').'
 
 echo ${log_3}
 echo ${log_3} >> LOG/${LOGFILE}
@@ -157,20 +152,19 @@ cat ${TEMP_FILE_G1M_P_1} | jq '. |
   "so": {
     "accession": ([.psd.g.sequence_ontology[].accession] | join(";"))
   },
-}' | jq --slurp -r 'unique | .[] |
-[
-  .snp_id,
-  .gene_id,
-  .so.accession
-] | @tsv
-' > ${OUTPUT_TABLE3}
+} | 
+{
+  "snp_id": .snp_id,
+  "gene_id": .gene_id,
+  "accession": .so.accession
+}' > ${OUTPUT_JSON3}
 
 if [ ${DEBUG_MODE_01} = 'yes' ]; then
 
 sleep 3
 
 time_4=$SECONDS
-log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_TABLE3}': '`getFileSize ${OUTPUT_TABLE3}`').'
+log_4='It took '${time_4}' seconds to generate table3 file ('${OUTPUT_JSON3}': '`getFileSize ${OUTPUT_JSON3}`').'
 
 echo ${log_4}
 echo ${log_4} >> LOG/${LOGFILE}

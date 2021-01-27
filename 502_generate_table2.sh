@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Please input one of TEMP_FILE_G1M1P1, TEMP_FILE_G1M1P0 or TEMP_FILE_G1M0P0 files as $1.
 # $2 is destination of output.
 
@@ -34,9 +36,9 @@ if [ ${FILE_SIZE} -gt ${LIMIT} ]; then
  
 else
 
-  method=$3
+  FLG_table2_type=$3
 
-  if [ ${method} = 1 ]; then
+  if [ ${FLG_table2_type} = 1 ]; then
 
 cat $1 | jq -r '. | 
 select(.psd.g.r.hgvs | contains("=") | not) |
@@ -54,23 +56,9 @@ select(.psd.g.r.hgvs | contains("---") | not) |
   "position_p": (if .psd.g.r.p.v.spdi.pos == 0 then "" else (.psd.g.r.p.v.spdi.pos + 1) end),
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
-}' | jq -s -r ' .[] |
-[
-  .refsnp_id,
-  .gene_id,
-  .accession_no_r,
-  .position_r,
-  .orientation,
-  .base_substitution,
-  .codon_change,
-  .accession_no_p,
-  .position_p,
-  .aa_substitution,
-  .SO_id
-] | @tsv
-' >> $2
+}' >> $2
 
-  elif  [ ${method} = 2 ]; then
+  elif  [ ${FLG_table2_type} = 2 ]; then
 
   echo 'echo'
 
@@ -99,16 +87,9 @@ map(
   "gene_id": .gene_id,
   "details": ([.accession_no_r, .position_r, .orientation, .base_substitution, .codon_change, .accession_no_p, .position_p, .aa_substitution, .SO_id] | join(","))
 }) | group_by(.refsnp_id + .gene_id) | 
-. as $ggp | 
 .[] as $gp | $gp | 
 reduce .[] as $rs (""; . + $rs.details + "|")  | 
 [{"refsnp_id": $gp[].refsnp_id , "gene_id": $gp[].gene_id , "details": .[:-1]} ] | unique | .[]
-' | jq -s -r ' .[] |
-[
-  .refsnp_id,
-  .gene_id,
-  .details
-] | @tsv
 ' >> $2
 
   fi

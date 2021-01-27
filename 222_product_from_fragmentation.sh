@@ -21,42 +21,92 @@ FRAGMENT_LIST=${INPUT_PATH}/.all_fragment_list
 PRODUCT_DIR=product_${FILE}_${DATESTR}
 mkdir ${PRODUCT_DIR}
 
-method=$2
+FLG_parallel=$2
+FLG_table2_type=$3
 
-if [ ${method} = 1 ]; then
+if [ ${FLG_parallel} = 1 ]; then
 
   cat ${FRAGMENT_LIST} | while read filepath
 
   do
 
-    sh 110_json_parser.sh ${filepath} ${PRODUCT_DIR}
+    sh 110_json_parser.sh ${filepath} ${PRODUCT_DIR} ${FLG_table2_type}
     echo ${filepath}
 
   done
 
-elif  [ ${method} = 2 ]; then
+elif  [ ${FLG_parallel} = 2 ]; then
 
   # hankaku kugirino list of files
   FRAGMENTS=`ls -d ${INPUT_PATH}/*`
-  parallel sh 110_json_parser.sh ::: ${FRAGMENTS} ::: ${PRODUCT_DIR}
+  parallel sh 110_json_parser.sh ::: ${FRAGMENTS} ::: ${PRODUCT_DIR} ::: ${FLG_table2_type}
 
 fi
 
-cat ${PRODUCT_DIR}/table1_${FILE}*.tsv > ${PRODUCT_DIR}/table1_${FILE}_tsv
-rm -rf ${PRODUCT_DIR}/table1_${FILE}*.tsv
+cat ${PRODUCT_DIR}/table1_${FILE}*.json > ${PRODUCT_DIR}/table1_${FILE}_json
 #mv ${PRODUCT_DIR}/table1_${FILE}_tsv ${PRODUCT_DIR}/table1_${FILE}.tsv
 
-cat ${PRODUCT_DIR}/table2_${FILE}*.tsv > ${PRODUCT_DIR}/table2_${FILE}_tsv
-rm -rf ${PRODUCT_DIR}/table2_${FILE}*.tsv
+cat ${PRODUCT_DIR}/table2_${FILE}*.json > ${PRODUCT_DIR}/table2_${FILE}_json
 #mv ${PRODUCT_DIR}/table2_${FILE}_tsv ${PRODUCT_DIR}/table2_${FILE}.tsv
 
-cat ${PRODUCT_DIR}/table3_${FILE}*.tsv > ${PRODUCT_DIR}/table3_${FILE}_tsv
-rm -rf ${PRODUCT_DIR}/table3_${FILE}*.tsv
+cat ${PRODUCT_DIR}/table3_${FILE}*.json > ${PRODUCT_DIR}/table3_${FILE}_json
 #mv ${PRODUCT_DIR}/table3_${FILE}_tsv ${PRODUCT_DIR}/table3_${FILE}.tsv
 
-sort -u ${PRODUCT_DIR}/table1_${FILE}_tsv > ${PRODUCT_DIR}/table1_${FILE}.tsv.sorted
-sort -u ${PRODUCT_DIR}/table2_${FILE}_tsv > ${PRODUCT_DIR}/table2_${FILE}.tsv.sorted
-sort -u ${PRODUCT_DIR}/table3_${FILE}_tsv > ${PRODUCT_DIR}/table3_${FILE}.tsv.sorted
+cat ${PRODUCT_DIR}/table1_${FILE}_json | jq -r '. |
+[
+  .refsnp_id,
+  .variation,
+  .chromosome,
+  .position_chr,
+  .citations
+] | @tsv
+' > ${PRODUCT_DIR}/table1_${FILE}_tsv
+
+if [ ${FLG_table2_type} = 1 ]; then
+
+cat ${PRODUCT_DIR}/table2_${FILE}_json | jq -r '. |
+[
+  .refsnp_id,
+  .gene_id,
+  .accession_no_r,
+  .position_r,
+  .orientation,
+  .base_substitution,
+  .codon_change,
+  .accession_no_p,
+  .position_p,
+  .aa_substitution,
+  .SO_id
+] | @tsv
+' > ${PRODUCT_DIR}/table2_${FILE}_tsv
+
+elif  [ ${FLG_table2_type} = 2 ]; then
+
+cat ${PRODUCT_DIR}/table2_${FILE}_json | jq -r '. |
+[
+  .refsnp_id,
+  .gene_id,
+  .details
+] | @tsv
+' > ${PRODUCT_DIR}/table2_${FILE}_tsv
+
+fi
+
+cat ${PRODUCT_DIR}/table3_${FILE}_json | jq --slurp -r '.[] |
+[
+  .snp_id,
+  .gene_id,
+  .accession
+] | @tsv
+' > ${PRODUCT_DIR}/table3_${FILE}_tsv
+
+rm -rf ${PRODUCT_DIR}/table1_${FILE}*json
+rm -rf ${PRODUCT_DIR}/table2_${FILE}*json
+rm -rf ${PRODUCT_DIR}/table3_${FILE}*json
+
+sort -u ${PRODUCT_DIR}/table1_${FILE}_tsv > ${PRODUCT_DIR}/table1_${FILE}.tsv
+sort -u ${PRODUCT_DIR}/table2_${FILE}_tsv > ${PRODUCT_DIR}/table2_type${FLG_table2_type}_${FILE}.tsv
+sort -u ${PRODUCT_DIR}/table3_${FILE}_tsv > ${PRODUCT_DIR}/table3_${FILE}.tsv
 
 rm -rf ${PRODUCT_DIR}/table1_${FILE}_tsv
 rm -rf ${PRODUCT_DIR}/table2_${FILE}_tsv
