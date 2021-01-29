@@ -79,17 +79,6 @@ select(.psd.g.r.hgvs | contains("---") | not) |
   "aa_substitution": .psd.g.r.p.v.spdi.d_i,
   "SO_id": .psd.g.r.so.accession
 } 
-
-' | jq -s '. | 
-map(
-{
-  "refsnp_id": .refsnp_id,
-  "gene_id": .gene_id,
-  "details": ([.accession_no_r, .position_r, .orientation, .base_substitution, .codon_change, .accession_no_p, .position_p, .aa_substitution, .SO_id] | join(","))
-}) | group_by(.refsnp_id + .gene_id) | 
-.[] as $gp | $gp | 
-reduce .[] as $rs (""; . + $rs.details + "|")  | 
-[{"refsnp_id": $gp[].refsnp_id , "gene_id": $gp[].gene_id , "details": .[:-1]} ] | unique | .[]
 ' >> $2
 
   fi

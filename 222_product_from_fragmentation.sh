@@ -82,7 +82,16 @@ cat ${PRODUCT_DIR}/table2_${FILE}_json | jq -r '. |
 
 elif  [ ${FLG_table2_type} = 2 ]; then
 
-cat ${PRODUCT_DIR}/table2_${FILE}_json | jq -r '. |
+cat ${PRODUCT_DIR}/table2_${FILE}_json | jq -s -r '. |
+map(
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": .gene_id,
+  "details": ([.accession_no_r, .position_r, .orientation, .base_substitution, .codon_change, .accession_no_p, .position_p, .aa_substitution, .SO_id] | join(","))
+}) | group_by(.refsnp_id + .gene_id) |
+.[] as $gp | $gp |
+reduce .[] as $rs (""; . + $rs.details + "|")  |
+[{"refsnp_id": $gp[].refsnp_id , "gene_id": $gp[].gene_id , "details": .[:-1]} ] | unique | .[] |
 [
   .refsnp_id,
   .gene_id,

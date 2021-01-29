@@ -1,0 +1,84 @@
+# This json, how do we do null-padding on "dbsnpl_merges" without destructing the structure of json?
+
+{
+	"refsnp_id": "268",
+	"create_date": "2000-09-19T17:02Z",
+	"last_update_date": "2020-04-26T16:05Z",
+	"last_update_build_id": "154",
+	"dbsnp1_merges": [
+		{
+			"a": "17850737",
+			"b": "126",
+			"c": "2006-03-11T06:16Z"
+		},
+		{
+			"d": "52818902",
+			"b": "128",
+			"c": "2007-09-21T16:03Z"
+		},
+		{
+			"e": "386571803",
+			"f": "136",
+			"g": "2014-08-6T12:19Z"
+		}
+	]
+	
+}
+
+# This jq is useful for this purpose.
+
+. | 
+
+{
+  "refsnp_id": .refsnp_id, 
+  "dbsnp1_merges": .dbsnp1_merges | 
+    map(
+      {
+        "a": (if .a == null then "---" else .a end), 
+        "b": (if .b == null then "---" else .b end), 
+        "c": (if .c == null then "---" else .c end), 
+        "d": (if .d == null then "---" else .d end), 
+        "e": (if .e == null then "---" else .e end), 
+        "f": (if .f == null then "---" else .f end), 
+        "g": (if .g == null then "---" else .g end)
+      }
+    )
+ }
+
+# The result is as follows.
+
+{
+  "refsnp_id": "268",
+  "dbsnp1_merges": [
+    {
+      "a": "17850737",
+      "b": "126",
+      "c": "2006-03-11T06:16Z",
+      "d": "---",
+      "e": "---",
+      "f": "---",
+      "g": "---"
+    },
+    {
+      "a": "---",
+      "b": "128",
+      "c": "2007-09-21T16:03Z",
+      "d": "52818902",
+      "e": "---",
+      "f": "---",
+      "g": "---"
+    },
+    {
+      "a": "---",
+      "b": "---",
+      "c": "---",
+      "d": "---",
+      "e": "386571803",
+      "f": "136",
+      "g": "2014-08-6T12:19Z"
+    }
+  ]
+}
+
+
+
