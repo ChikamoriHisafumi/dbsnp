@@ -9,22 +9,27 @@ FILE=`basename ${INPUT_PATH}`
 
 FILE_TYPE=`file ${INPUT_PATH}`
 
-TEMP_DIR=FRAGMENT_${FILE}
+DIR=FRAGMENT
+DIR_SUB=FRAGMENT_${FILE}
 
-if [ ! -d ./${TEMP_DIR} ]; then
-  mkdir ${TEMP_DIR}
+if [ ! -d ./${DIR} ]; then
+  mkdir ./${DIR}
+fi
+
+if [ ! -d ./${DIR}/${DIR_SUB} ]; then
+  mkdir ./${DIR}/${DIR_SUB}
 fi
 
 if [ "`echo $FILE_TYPE | grep 'ASCII'`" ]; then
 
-  cat ${INPUT_PATH} > ${TEMP_DIR}/temp_process.json
+  cat ${INPUT_PATH} > ${DIR}/${DIR_SUB}/temp_process.json
 
 elif [ "`echo $FILE_TYPE | grep 'bzip'`" ]; then
 
-  bzcat ${INPUT_PATH} > ${TEMP_DIR}/temp_process.json
+  bzcat ${INPUT_PATH} > ${DIR}/${DIR_SUB}/temp_process.json
 fi
 
-cd ${TEMP_DIR}
+cd ${DIR}/${DIR_SUB}
 
 split temp_process.json -l10000 --verbose ${FILE}.
 
@@ -32,3 +37,4 @@ rm -rf temp_process.json
 
 ls -d `pwd`/* > ./.all_fragment_list
 
+cd ../../

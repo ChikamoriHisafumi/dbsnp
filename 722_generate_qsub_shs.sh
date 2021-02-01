@@ -38,7 +38,7 @@ DBSNP_PATH=${DBSNP_PATH}
 cd \${DBSNP_PATH}
 . ./settings.txt
 
-sh 222_product_from_fragmentation.sh ${DBSNP_PATH}/FRAGMENT/FRAGMENT_refsnp-chr\${chromosome} \${mode}
+sh 223_product_from_fragmentation.sh ${DBSNP_PATH}/FRAGMENT/FRAGMENT_refsnp-chr\${chromosome} \${mode}
 
 EOH
 

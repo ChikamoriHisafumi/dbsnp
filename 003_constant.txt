@@ -1,0 +1,230 @@
+#!/bin/bash
+
+. ./settings.txt
+
+PATH=${ADDITIONAL_PATH}:$PATH
+
+FORMATTER_00='. |
+{
+  "refsnp_id": .refsnp_id,
+  "citations": .citations,
+  "psd":{
+    "pwa": .primary_snapshot_data.placements_with_allele | map(
+
+      {
+
+        "seq_id": .seq_id,
+        "is_ptlp": .is_ptlp,
+        "chromosome":
+          (if .seq_id[7:9] == "23" then "X"
+          elif .seq_id[7:9] == "24" then "Y"
+          elif .seq_id[7:8] == "0" then .seq_id[8:9]
+          else .seq_id[7:9] end),
+        "als": .alleles | map(
+          {
+            "al": {
+              "spdi": {
+                "seq_id": .allele.spdi.seq_id,
+                "pos": .allele.spdi.position,
+                "del": .allele.spdi.deleted_sequence,
+                "ins": .allele.spdi.inserted_sequence
+              },
+              "hgvs": .hgvs
+            }
+          }
+        | select(.al.hgvs | contains(">"))
+        )
+      }
+    | select(.is_ptlp == true)
+    ),
+    "alla": .primary_snapshot_data.allele_annotations | map(
+      {
+        "assa": .assembly_annotation | map(
+          {
+            "gs": .genes | map(
+              {
+                "id": .id,
+                "o": .orientation,
+                "rs": .rnas | map(
+                  {
+                    "id": .id,
+                    "catc": {
+                      "seq_id": .codon_aligned_transcript_change.seq_id,
+                      "pos": .codon_aligned_transcript_change.position,
+                      "del": .codon_aligned_transcript_change.deleted_sequence,
+                      "ins": .codon_aligned_transcript_change.inserted_sequence,
+                      "d_i": (
+                        if .codon_aligned_transcript_change.deleted_sequence == null then ""
+                        else (.codon_aligned_transcript_change.deleted_sequence + " -> "
+                        + .codon_aligned_transcript_change.inserted_sequence)
+                        end
+                      )
+                    },
+                    "so": {
+                      "accession": ([.sequence_ontology[].accession] | join(";"))
+                    },
+                    "product_id": .product_id,
+                    "p": {
+                      "v": {
+                        "spdi": {
+                          "seq_id": .protein.variant.spdi.seq_id,
+                          "pos": (
+                            if .protein.variant.spdi.position == null then 0
+                            else .protein.variant.spdi.position
+                            end
+                          ),
+                          "del": .protein.variant.spdi.deleted_sequence,
+                          "ins": .protein.variant.spdi.inserted_sequence,
+                          "d_i": (
+                            if .protein.variant.spdi.deleted_sequence == null then ""
+                            else (.protein.variant.spdi.deleted_sequence + " -> " + .protein.variant.spdi.inserted_sequence)
+                            end
+                          )
+                        }
+                      }
+                    },
+                    "hgvs": .hgvs
+                  }
+                | select(.hgvs == null | not)
+                | select(.hgvs | contains("=") | not)
+                )
+              }
+            | select((.rs | length)>0)
+            )
+          }
+        | select((.gs | length)>0)
+        )
+      }
+      | select((.assa | length)>0)
+    )
+  }
+}
+'
+
+FORMATTER_01='. |
+map( .psd.pwa[] as $pwa | $pwa.als[].al as $al |
+{
+  "refsnp_id": .refsnp_id,
+  "variation": ($al.spdi.del + ">" + $al.spdi.ins),
+  "chromosome": $pwa.chromosome,
+  "position_chr": ($pwa.chromosome + ":" + (($al.hgvs / ":")[1] | gsub("[a-zA-Z.>]"; ""))),
+  "citations": (.citations | join(";"))
+}
+) | group_by(.refsnp_id) |
+.[] as $unit | $unit |
+reduce .[] as $rs (""; . + $rs.variation + " / ") |
+[
+  {
+    "refsnp_id": $unit[].refsnp_id,
+    "variation": .[:-3],
+    "chromosome": $unit[].chromosome,
+    "position_chr": $unit[].position_chr,
+    "citations": $unit[].citations
+  }
+] | unique | .[]
+'
+
+FORMATTER_02='. | .psd.alla[].assa[].gs[] as $g | $g.rs[] as $r | $r.p as $p |
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": $g.id,
+  "accession_no_r": $r.id,
+  "position_r": (if $r.catc.pos == 0 then "" else ($r.catc.pos + 1) end),
+  "orientation": (if $g.o == "plus" then "Fwd" elif $g.o == "minus" then "Rev" else "---" end),
+  "base_substitution": (if $r.hgvs | contains("=") then "---" else ($r.hgvs[-3:] | gsub(">";" -> ")) end),
+  "codon_change": $r.catc.d_i,
+  "accession_no_p": $r.product_id,
+  "position_p": (if $p.v.spdi.pos == 0 then "" else ($p.v.spdi.pos + 1) end),
+  "aa_substitution": $p.v.spdi.d_i,
+  "SO_id": $r.so.accession
+}
+'
+
+FORMATTER_03='. |
+{
+  "refsnp_id": .refsnp_id,
+  "gene_id": (.psd.alla[].assa[].gs[].id | tostring)
+}
+'
+
+FORMATTER_04='
+{
+  "refsnp_id": .refsnp_id,
+  "genes": [.psd.alla[][] | flatten | .[].gs[]]
+} |
+
+{
+  "refsnp_id": .refsnp_id,
+  "genes": .genes | map(
+    {
+      "g_id": .id,
+      "o": .o,
+      "r": .rs[]
+    }
+  )
+} |
+
+[
+  .genes[] as $g |
+  $g.r as $r |
+  $r.p as $p |
+  {
+    "refsnp_id": .refsnp_id,
+    "g_id": ($g.g_id|tostring),
+    "details":
+      (
+        [
+          $r.id,
+          (if $r.catc.pos == 0 then "" else ($r.catc.pos + 1) end),
+          (if $g.o == "plus" then "Fwd" elif $g.o == "minus" then "Rev" else "---" end),
+          (if $r.hgvs | contains("=") then "---" else ($r.hgvs[-3:] | gsub(">";" -> ")) end),
+          $r.catc.d_i,
+          $r.product_id,
+          (if $p.v.spdi.pos == 0 then "" else ($p.v.spdi.pos + 1) end),
+          $p.v.spdi.d_i,
+          $r.so.accession
+        ] | join(",")
+      )
+  }
+] | group_by(.refsnp_id + .g_id) |
+
+.[] as $gp | $gp |
+reduce .[] as $rs (""; . + $rs.details + "|") |
+[
+  $gp[] as $u |
+  {
+    "refsnp_id": $u.refsnp_id,
+    "gene_id": $u.g_id ,
+    "details": (.[:-1])
+  }
+] | .[]
+'
+
+format_00(){
+
+  jq "${FORMATTER_00}"
+
+}
+
+format_01(){
+
+  jq -s -r "${FORMATTER_01}"
+
+}
+
+format_02(){
+
+  jq -c "${FORMATTER_02}"
+
+}
+format_03(){
+
+  jq -c "${FORMATTER_03}"
+
+}
+
+format_04(){
+
+  jq -c "${FORMATTER_04}"
+
+}
