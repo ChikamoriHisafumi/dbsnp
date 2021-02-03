@@ -14,6 +14,13 @@
 # In addition to this reason, 3. and 4. are able to be run under parallel computing.
 # Even if any error or trouble happened when running 3. or 4., we can restart from 3. (not from 1.).
 
+# In step 3. and step 4., you can see '003_constant.txt' 
+# to understand how to generate temporary json file and how to generate 4 tables.
+# A variable ${FORMATTER_00} on jq generates temporary json file.
+# And, variables ${FORMATTER_01} to ${FORMATTER_04} on jq generate 4 tables.
+# These variables are important part of script.
+# So how to write them may affect performance and speeding-up.
+
 ###############
 # Preparation #
 ###############
