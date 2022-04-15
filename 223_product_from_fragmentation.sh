@@ -11,13 +11,15 @@ PATH=${ADDITIONAL_PATH}:$PATH
 # please input directory which contains fragmented files and their list
 
 INPUT_PATH=$1
-FILE=`basename ${INPUT_PATH} | sed 's/FRAGMENT_//g'`
+FILE=`basename ${INPUT_PATH} | sed 's/FRAGMENT_'${VERSION}'_//g'`
+
+FILE=`echo ${FILE} | sed 's/.json.bz2//g'`
 
 # cd ${INPUT_PATH}
 
 FRAGMENT_LIST=${INPUT_PATH}/.all_fragment_list
 
-PRODUCT_DIR=product_${FILE}_${DATESTR}
+PRODUCT_DIR=product_${VERSION}_${FILE}_${DATESTR}
 
 mkdir ${PRODUCT_DIR}
 mkdir 'temp_'${PRODUCT_DIR}
@@ -107,7 +109,13 @@ rm -rf ${PRODUCT_DIR}/table4_${FILE}_tsv
 
 sleep 3
 
-mv ${PRODUCT_DIR} TABLE/
+table=TABLE_${VERSION}/
+
+if [ ! -d ./${table} ]; then
+  mkdir ${table} 
+fi
+
+mv ${PRODUCT_DIR} ${table}
 
 rm -rf 'temp_'${PRODUCT_DIR}
 

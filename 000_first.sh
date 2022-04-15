@@ -25,6 +25,9 @@ DEBUG_MODE_01=no
 DEBUG_MODE_02=yes
 DEBUG_MODE_03=yes
 
+# Please input the dbSNP version on NCBI what you want to convert and generate products.
+
+VERSION=b15_
+
 EOH
 
-mkdir BZ2

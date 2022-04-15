@@ -4,7 +4,7 @@
 
 arr_chr=('1' '2' '3' '4' '5' '6' '7' '8' '9' '10' '11' '12' '13' '14' '15' '16' '17' '18' '19' '20' '21' '22' 'X' 'Y' 'MT')
 
-DIR_NAME=622_SMALL_from_FRAGMENT
+DIR_NAME=622_SMALL_from_FRAGMENT_${VERSION}
 
 if [ ! -d ./${DIR_NAME} ]; then
   mkdir ./${DIR_NAME}
@@ -38,7 +38,7 @@ DBSNP_PATH=${DBSNP_PATH}
 cd \${DBSNP_PATH}
 . ./settings.txt
 
-sh 223_product_from_fragmentation.sh ${DBSNP_PATH}/FRAGMENT/FRAGMENT_refsnp-chr\${chromosome} \${mode}
+sh 223_product_from_fragmentation.sh ${DBSNP_PATH}/FRAGMENT_${VERSION}/FRAGMENT_${VERSION}_refsnp-chr\${chromosome}.json.bz2 \${mode}
 
 EOH
 

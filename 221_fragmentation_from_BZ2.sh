@@ -9,8 +9,8 @@ FILE=`basename ${INPUT_PATH}`
 
 FILE_TYPE=`file ${INPUT_PATH}`
 
-DIR=FRAGMENT
-DIR_SUB=FRAGMENT_${FILE}
+DIR=FRAGMENT_${VERSION}
+DIR_SUB=${DIR}_${FILE}
 
 if [ ! -d ./${DIR} ]; then
   mkdir ./${DIR}

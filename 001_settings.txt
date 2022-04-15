@@ -1,7 +1,7 @@
 
-FTP_URL=https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/
+FTP_URL=https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/${VERSION}/JSON/
 
-ARR_CHR_BZ2_1=(\
+ARR_CHR_BZ2=(\
 refsnp-chrY.json.bz2 \
 refsnp-chrX.json.bz2 \
 refsnp-chrMT.json.bz2 \
@@ -17,9 +17,6 @@ refsnp-chr9.json.bz2 \
 refsnp-chr10.json.bz2 \
 refsnp-chr11.json.bz2 \
 refsnp-chr12.json.bz2 \
-)
-
-ARR_CHR_BZ2_2=(\
 refsnp-chr13.json.bz2 \
 refsnp-chr14.json.bz2 \
 refsnp-chr15.json.bz2 \
@@ -30,16 +27,10 @@ refsnp-chr19.json.bz2 \
 refsnp-chr20.json.bz2 \
 refsnp-chr21.json.bz2 \
 refsnp-chr22.json.bz2 \
-)
-
-ARR_CHR_BZ2_3=(\
-refsnp-chrMT.json.bz2 \
-refsnp-chrX.json.bz2 \
-refsnp-chrY.json.bz2 \
 # refsnp-merged.json.bz2 \
 # refsnp-nosnppos.json.bz2 \
 refsnp-other.json.bz2 \
-refsnp-sample.json.bz2 \
+# refsnp-sample.json.bz2 \
 # refsnp-unsupported.json.bz2 \
 # refsnp-withdrawn.json.bz2 \
 )
