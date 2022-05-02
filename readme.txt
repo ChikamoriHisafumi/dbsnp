@@ -1,106 +1,57 @@
+################################
+# Introduction and a Procedure #
+################################
+
+Updated at 2022/05/02:
+The required time has been shortened again to about 20 hours (If measured by the previous version, the required time was about 72 hours).
+
 ################
-# Introduction #
+# Requirements #
 ################
 
 # (How to generate tables)
+# Fortunately, it became a simpler procedure compared to the previous snapshot.
+# What we need to do is only to run 1 shell script on the gpu cluster server.
 
-# 1. Download bz2 files from dbsnp site
-# 2. Extract a bz2 file and split into tens, hundreds or thousands of json files
-# 3. Generate a temporary json file from original json file
-# 4. Generate 4 tables from temporary json file
+# About 20TB disk space is required in case of dbsnp b155 version.
+# About 10TB disk space is required in case of dbsnp b154 version.
 
-# It is recommendable that these process are done separately.
-# Because it takes too long to perform 1. and 2., owing to the large size of original bz2 files.
-# In addition to this reason, 3. and 4. are able to be run under parallel computing.
-# Even if any error or trouble happened when running 3. or 4., we can restart from 3. (not from 1.).
+# For example, in case of the chromosome 1, the extracted file's size is about 800GB (biggest). 
 
-# In step 3. and step 4., you can see '003_constant.txt' 
-# to understand how to generate temporary json file and how to generate 4 tables.
-# A variable ${FORMATTER_00} on jq generates temporary json file.
-# And, variables ${FORMATTER_01} to ${FORMATTER_04} on jq generate 4 tables.
-# These variables are important part of script.
-# So how to write them may affect performance and speeding-up.
+###########
+# Options #
+###########
 
-###############
-# Preparation #
-###############
+# In this shell script, you need to change any variables.
+# On the top of this shell scirpt, we can see as follows.
 
-# Please download binary files (jq and parallel).
-# In case of parallel, please select version to download.
+----------------------------------------------------------------------
+#1 Working directory (FULL PATH)
+dir_dbsnp=/home/nibiohnproj9/chikamori/dbsnp
 
-https://stedolan.github.io/jq/
-https://ftp.gnu.org/gnu/parallel/
+#2 The chromosomes which you want to get as table1-table4
+ARR=(X Y MT 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22)
+# ARR=(MT Y 22)
+# ARR=(MT Y X 21 22)
+# ARR=(MT Y)
+# ARR=(MT)
 
-# Run this sh file to generate settings.txt and BZ2 directory.
-# (Why is settings.txt absent? -> because settings vary on every user's environment)
-# Especially, path of jq and parallel is important, and these PATHes should be set in settings.txt.
-# There are some input sample value in settings.txt.
+#3 The version of dbSNP you want to get
+VER=b154
+VER=b155
 
-sh 000_first.sh
+#4 Don't you want to leave the download files and fragments for later?
 
-vim settings.txt
-# -> Please fill ADDITIONAL_PATH and DBSNP_PATH.
-# These two are IMPORTANT, so do not forget filling.
+readonly del_BZ2=true
+readonly del_FRAGMENT=true
 
-######
-# 1. #
-######
+----------------------------------------------------------------------
 
-# Enter into BZ2 directory, and get json file of chromosome Y.
+#######
+# Run #
+#######
 
-cd BZ2/
-wget https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b154/JSON/refsnp-chrY.json.bz2
+qsub 271_generate_tables.sh
 
-# Confirm that there are a bz2 file of Y in BZ2 directory.
-# "BZ2/refsnp-chrY.json.bz2"
-
-######
-# 2. #
-######
-
-# Go back to the top of repository.
-
-cd ..
-
-# Run a batch file to extract and split raw json file into FRAGMENT directory.
-
-sh 221_fragmentation_from_BZ2.sh BZ2/refsnp-chrY.json.bz2
-
-# Go back to the top of repository, and generate shell files in 622_SMALL_from_FRAGMENT directory.
-# And run sh in 622_SMALL_from_FRAGMENT directory by qsub.
-# The initial number of file, "24_", means chromosome "Y".
-# If you want to check, please see inside of shell file.
-
-cd ..
-sh 722_generate_qsub_shs.sh
-
-#########
-# 3. 4. #
-#########
-
-# This shell file can perform the step 3. and 4. successively.
-
-qsub 622_SMALL_from_FRAGMENT/24_qsub_SMALL.sh
-
-# About 5 minitues passed, please confirm the product in the TABLE directory.
-# You will be able to find "product_refsnp-chrY_xxxxxx" directory and this contains 4 tables.
-
-ll TABLE/
-
-###############
-# That's all. # 
-###############
-
-
-# In fact, there are many shell scripts in repository, but what functions are only as follows.
-# So, please check inside of these script to confirm these program are good one, if time permits.
-
-# 000_first.sh
-# 003_constant.txt
-# 111_json_parser.sh
-# 221_fragmentation_from_BZ2.sh
-# 223_product_from_fragmentation.sh
-# 722_generate_qsub_shs.sh
-
-# Very sorry for gibberish and difficult explanation. If you have any question, please contact me.
+# If you have any question, please contact me.
 
