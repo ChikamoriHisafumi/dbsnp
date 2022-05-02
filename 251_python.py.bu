@@ -1,0 +1,166 @@
+import os
+import re
+
+import pandas as pd
+import json
+
+import sys
+
+
+def generateTable1(full_path, chr_name):
+
+    fileobj = open(full_path, "r", encoding="utf_8")
+    filename = full_path.split('/')[-1]
+
+    results = []
+
+    while True:
+
+        i = 1
+
+        line = fileobj.readline()
+
+        if line:
+
+            jsn = json.loads(line)
+
+            result1 = {}
+
+            result1['refsnp_id'] = jsn['refsnp_id']
+
+            citations = jsn['citations']
+    #                 result1['citations'] = ';'.join(jsn['citations'])
+
+            if type(citations) == list:
+
+                str_citations = [str(e) for e in citations]
+
+                result1['citations'] = ';'.join(str_citations)
+
+            else:
+
+                result1['citations'] = ''
+
+    #         results.append(result1)
+
+            pwas = jsn['primary_snapshot_data']['placements_with_allele']
+
+            for _pwa in pwas:
+
+                result2 = result1.copy()
+
+                seq_id = _pwa['seq_id']
+
+                result2['seq_id'] = seq_id
+                result2['is_ptlp'] = _pwa['is_ptlp']
+
+    #                     seq_id_7_9 = seq_id[7:9]
+
+                result2['chromosome'] = seq_id[7:9]
+
+                if seq_id[7:9] == "23":
+
+                    result2['chromosome2'] = "X"
+
+                elif seq_id[7:9] == "24":
+
+                    result2['chromosome2'] = "Y"
+
+                elif seq_id[7:8] == "0":
+
+                    result2['chromosome2'] = seq_id[8:9]
+
+                else:
+
+                    result2['chromosome2'] = seq_id[7:9]
+
+    #             results.append(result2)
+
+                als = _pwa['alleles']
+
+                for _al in als:
+
+                    result3 = result2.copy()
+
+                    hgvs = _al['hgvs']
+
+#                     pos_chr = hgvs.split(':')[1]
+#                     result3['position_chr'] = result3['chromosome2'] + ':' + re.sub(r'\D', '', pos_chr)
+                    # 元の文字列から数字以外を削除＝数字を抽出
+
+                    result3['hgvs'] = hgvs
+
+                    if 'spdi' in _al['allele'].keys():
+
+                        spdi = _al['allele']['spdi']
+
+                        result3['allele_seq_id'] = spdi['seq_id']
+                        result3['pos'] = spdi['position']
+                        result3['del'] = spdi['deleted_sequence']
+                        result3['ins'] = spdi['inserted_sequence']
+
+                        result3['variations'] = result3['del'] + '>' + result3['ins']
+                        result3['type'] = 'spdi'
+
+                    elif 'frameshift' in _al['allele'].keys():
+
+                        frameshift = _al['allele']['frameshift']
+
+                        result3['allele_seq_id'] = frameshift['seq_id']
+                        result3['pos'] = frameshift['position']
+                        result3['del'] = ''
+                        result3['ins'] = ''
+
+                        result3['variations'] = ''
+                        result3['type'] = 'frameshift'
+
+
+                    results.append(result3)
+
+        else:
+
+            break
+
+    new_dir = './TABLE_py/' + chr_name + '/table1' 
+
+    if not os.path.exists(new_dir) :
+
+        os.makedirs(new_dir)
+    
+    df1 = pd.read_json(json.dumps(results))
+    
+    df2 = df1[df1['is_ptlp']][
+        [
+            'refsnp_id',
+#                     'variations',
+            'chromosome2',
+#                     'position_chr',
+            'pos',
+            'del',
+            'ins',
+            'citations',
+            'hgvs',
+	    'type'
+        ]
+    ]
+    
+    df2.to_csv(new_dir + '/' + filename + '.tsv_table1', sep="\t", index=False, header=False)
+    
+
+#     return results
+
+# results = []
+
+# if fl.startswith('.') == False:
+
+#     filepath = base + fl
+
+# rg = sys.argv[1]
+
+# filename = rg.split('/')[-1]
+
+# fileobj = open(sys.argv[1], "r", encoding="utf_8")
+        
+generateTable1(sys.argv[1], sys.argv[2])
+print(sys.argv[1] + ' was converted.')
+

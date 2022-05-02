@@ -129,7 +129,7 @@ FORMATTER_02='. | .psd.alla[].assa[].gs[] as $g | $g.rs[] as $r | $r.p as $p |
   "refsnp_id": .refsnp_id,
   "gene_id": $g.id,
   "accession_no_r": $r.id,
-  "position_r": (if $r.catc.pos == 0 then "" else ($r.catc.pos + 1) end),
+  "position_r": (if $r.catc.pos == null then "" else (($r.catc.pos + 1)|tostring) end),
   "orientation": (if $g.o == "plus" then "Fwd" elif $g.o == "minus" then "Rev" else "---" end),
   "base_substitution": (if $r.hgvs | contains("=") then "---" else ($r.hgvs[-3:] | gsub(">";" -> ")) end),
   "codon_change": $r.catc.d_i,
