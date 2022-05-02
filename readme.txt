@@ -3,6 +3,7 @@
 ################################
 
 Updated at 2022/05/02:
+I gave up using jq because it was too hard to find bugs and fix them. So, some of these files on this repository will be useless.
 The required time has been shortened again to about 20 hours (If measured by the previous version, the required time was about 72 hours).
 
 ################
