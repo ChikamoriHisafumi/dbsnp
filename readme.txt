@@ -4,7 +4,7 @@
 
 Updated at 2022/05/02:
 I gave up using jq because it was too hard to find bugs and fix them. So, some of these files on this repository will be useless.
-The required time has been shortened again to about 20 hours (If measured by the previous version, the required time was about 72 hours).
+In case of b155, the required time has been shortened again to about 20 hours (If measured by the previous snapshot, the required time was about 72 hours).
 
 ################
 # Requirements #
@@ -23,12 +23,14 @@ The required time has been shortened again to about 20 hours (If measured by the
 # Options #
 ###########
 
-# In this shell script (271_generate_tables.sh), you need to change any variables.
+# In this shell script (271_generate_tables.sh), you need to change several variables.
 # On the top of this shell scirpt, we can see as follows.
 # So, please edit 271_generate_tables.sh on vi or vim editors.
 
 # Why must we overwrite these variables on this shell script?
-# Because the qsub command can only take the executable file names as 1st argument(and can not use the 2nd, the 3rd arguments).
+# Because the qsub command can only take the executable file names as 1st argument (and can not use the 2nd, the 3rd arguments).
+
+# If in future, the dbsnp will be updated to b156, the variable VER might be set as b156. It will work correctly (probably).
 
 ----------------------------------------------------------------------
 #1 Working directory (FULL PATH)
