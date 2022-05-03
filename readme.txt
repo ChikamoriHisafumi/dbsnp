@@ -23,8 +23,12 @@ The required time has been shortened again to about 20 hours (If measured by the
 # Options #
 ###########
 
-# In this shell script, you need to change any variables.
+# In this shell script (271_generate_tables.sh), you need to change any variables.
 # On the top of this shell scirpt, we can see as follows.
+# So, please edit 271_generate_tables.sh on vi or vim editors.
+
+# Why must we overwrite these variables on this shell script?
+# Because the qsub command can only take the executable file names as 1st argument(and can not use the 2nd, the 3rd arguments).
 
 ----------------------------------------------------------------------
 #1 Working directory (FULL PATH)
