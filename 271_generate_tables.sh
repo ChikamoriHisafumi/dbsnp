@@ -14,8 +14,8 @@ dir_dbsnp=/home/nibiohnproj9/chikamori/dbsnp
 ARR=(X Y MT 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22)
 # ARR=(MT Y 22)
 # ARR=(MT Y X 21 22)
-# ARR=(MT Y)
-# ARR=(MT)
+#ARR=(MT Y)
+#ARR=(MT)
 
 #3 The version of dbSNP you want to get
 VER=b154
@@ -112,11 +112,24 @@ rm -rf ./shells_download_and_split
 
 INPUT_PATH=/home/nibiohnproj9/chikamori/dbsnp/FRAGMENT_b155
 
-parallel md5sum ::: `find ${dir_dbsnp}/${TEMP_BZ2}/*.json.bz2 -type f` > ${dir_dbsnp}/${TEMP_BZ2}/md5sum.result
-sort ${dir_dbsnp}/${TEMP_BZ2}/md5sum.result > ${dir_dbsnp}/${TEMP_BZ2}/md5sum.result.sorted
-
 cd ${dir_dbsnp}/${TEMP_BZ2}
-wget https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/b155/JSON/CHECKSUMS
+
+parallel md5sum ::: `find ./*.json.bz2 -type f` > ./md5sum.result
+sed -ie s%./%%g ./md5sum.result
+sort ./md5sum.result > ./md5sum.result.sorted
+rm -rf ./md5sum.result
+rm -rf ./md5sum.resulte
+
+wget https://ftp.ncbi.nlm.nih.gov/snp/.redesign/archive/${VER}/JSON/CHECKSUMS
+
+
+cd ${dir_dbsnp}/${TEMP_FRAGMENT}
+
+parallel md5sum ::: `find FRAGMENT_*/*.json.bz2.* -type f` > ./md5sum.result
+# sed -ie s%./%%g ./md5sum.result
+sort ./md5sum.result > ./md5sum.result.sorted
+rm -rf ./md5sum.result
+rm -rf ./md5sum.resulte
 
 ###############################################################################
 # Generate tables all together.
@@ -135,12 +148,6 @@ SUBDIR_FRAGMENT=FRAGMENT_${VER}_${BZ2_FILE}
 # parallel python 251_python.py ::: `cat ${TEMP_FRAGMENT}/FRAGMENT_${VER}_refsnp-chr$i.json.bz2/.all_fragment_list` ::: $i ::: ${TEMP_DATA}
 parallel python 251_python.py ::: `cat ${TEMP_FRAGMENT}/${SUBDIR_FRAGMENT}/.all_fragment_list` ::: $i ::: ${TEMP_DATA}
 done
-
-cd ${dir_dbsnp}/${TEMP_FRAGMENT}
-
-parallel md5sum ::: `find ./FRAGMENT_*/*.json.bz2.* -type f` > ./md5sum.result
-sort ./md5sum.result > ./md5sum.result.sorted
-
 
 ###############################################################################
 # Concatenate these converted files and sort.
